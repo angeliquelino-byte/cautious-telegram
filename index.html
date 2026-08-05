@@ -9,7 +9,7 @@
   <style>
     body {
       background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat; /* reliable parchment texture */
-      color: #4B2E2E; /* dark brown text */
+      color: #4B2E2E;
       text-align: center;
       font-family: 'Cinzel Decorative', cursive;
       font-size: 22px;
@@ -18,8 +18,8 @@
     h2 {
       margin-top: 50px;
       font-size: 42px;
-      color: #8B0000; /* deep red */
-      text-shadow: 2px 2px #FFD700; /* gold glow */
+      color: #8B0000;
+      text-shadow: 2px 2px #FFD700;
     }
 
     p {
@@ -27,12 +27,20 @@
       margin-top: 20px;
     }
 
+    input {
+      padding: 10px;
+      font-size: 20px;
+      margin-top: 20px;
+      border: 2px solid #8B0000;
+      border-radius: 8px;
+    }
+
     button {
-      padding: 16px 32px;
+      padding: 12px 28px;
       font-size: 22px;
       cursor: pointer;
       margin-top: 20px;
-      background: linear-gradient(#FFD700, #DAA520); /* gold gradient */
+      background: linear-gradient(#FFD700, #DAA520);
       border: 3px solid #8B0000;
       border-radius: 10px;
       color: #4B2E2E;
@@ -43,26 +51,7 @@
       transform: scale(1.1);
     }
 
-    .correct {
+    .result {
       margin-top: 20px;
       font-size: 24px;
-      color: green;
-      font-weight: bold;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h2>QUESTION 1</h2>
-  <p>WHAT NUMBER SYSTEM USES ONLY 0 AND 1?</p>
-  <button onclick="showCorrect()">Answer</button>
-  <div class="correct" id="correctMsg">Correct! It is Binary!</div>
-
-  <script>
-    function showCorrect() {
-      document.getElementById('correctMsg').style.display = 'block';
-      confetti();
-    }
-  </script>
-</body>
-</html>
+      font-weight: bold
