@@ -20,8 +20,8 @@
     .balloon {
       display: inline-block;
       margin: 20px;
-      width: 80px;
-      height: 110px;
+      width: 100px;
+      height: 130px;
       border-radius: 50%;
       position: relative;
       animation: float 6s ease-in-out infinite;
@@ -43,12 +43,6 @@
       0% { transform: translateY(0); }
       50% { transform: translateY(-40px); }
       100% { transform: translateY(0); }
-    }
-    img {
-      margin-top: 20px;
-      max-width: 300px;
-      border: 4px solid #8B0000;
-      border-radius: 12px;
     }
     p { font-size: 22px; margin-top: 20px; }
     button {
@@ -75,8 +69,8 @@
 
   <p id="message">Pop the balloons to reveal surprises!</p>
 
-  <!-- Picture placeholder -->
-  <img src="" alt="Celebration Picture">
+  <!-- Picture placeholder for Balloon 2 -->
+  <img id="photo" src="" alt="" style="display:none; max-width:300px; border:4px solid #8B0000; border-radius:12px; margin-top:20px;">
 
   <p>🎉 Happy Birthday and Congratulations! 🎉</p>
 
@@ -84,14 +78,19 @@
 
   <script>
     function popBalloon(element, num) {
-      // Remove the balloon (simulate popping)
+      // Hide the balloon (simulate popping)
       element.style.display = "none";
 
       const msg = document.getElementById('message');
+      const photo = document.getElementById('photo');
+
       if (num === 1) {
         msg.textContent = "Balloon 1: 2026 - 1995? You are now 31 years old!";
       } else if (num === 2) {
         msg.textContent = "Balloon 2: Here’s a smiling surprise picture just for you!";
+        // Show photo when you add src later
+        photo.style.display = "block";
+        photo.src = "your-picture.jpg"; // replace with actual image file or URL
       } else if (num === 3) {
         msg.textContent = "Balloon 3: Oops, no gift here… The real gift is the adventure we shared and the ones still to come — Happy Birthday!";
       }
