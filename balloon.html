@@ -19,48 +19,4 @@
     .link{margin-top:20px;font-size:20px;display:none;}
     .link a{color:#006400;text-decoration:underline;font-weight:bold;}
     button{padding:12px 28px;font-size:20px;cursor:pointer;margin-top:30px;background:linear-gradient(#FFD700,#DAA520);border:3px solid #8B0000;border-radius:10px;color:#4B2E2E;font-weight:bold;}
-    button:hover{background:linear-gradient(#DAA520,#FFD700);transform:scale(1.1);}
-  </style>
-</head>
-<body>
-  <h1>🎈 Birthday Balloon Challenge 🎈</h1>
-  <div>
-    <div class="balloon red" onclick="showSurprise(1)"></div>
-    <div class="balloon green" onclick="showSurprise(2)"></div>
-    <div class="balloon purple" onclick="showSurprise(3)"></div>
-  </div>
-
-  <!-- Surprises -->
-  <p id="surprise1" class="surprise">Balloon 1: 2026 - 1995? You are now 31 years old!</p>
-  <p id="surprise2" class="surprise">Balloon 2: Here’s a smiling surprise picture just for you!</p>
-  <div class="photos">
-    <img id="photo1" src="" alt="Surprise Photo 1">
-    <img id="photo2" src="" alt="Surprise Photo 2">
-  </div>
-  <!-- Link trigger -->
-  <p id="link2" class="link">👉 <a href="https://example.com" target="_blank">Click here for your extra surprise!</a></p>
-
-  <p id="surprise3" class="surprise">Balloon 3: Oops, no gift here… The real gift is the adventure we shared and the ones still to come — Happy Birthday!</p>
-
-  <p style="margin-top:30px;font-size:24px;font-family:'Cinzel Decorative',cursive;">🎉 Happy Birthday and Congratulations! 🎉</p>
-
-  <button onclick="window.location.href='index.html'">Back to Start</button>
-
-  <script>
-    function showSurprise(num){
-      if(num===1){
-        document.getElementById('surprise1').style.display="block";
-      } else if(num===2){
-        document.getElementById('surprise2').style.display="block";
-        document.getElementById('photo1').style.display="inline-block";
-        document.getElementById('photo2').style.display="inline-block";
-        document.getElementById('photo1').src="surprise1.jpg";
-        document.getElementById('photo2').src="surprise2.jpg";
-        document.getElementById('link2').style.display="block"; // show link
-      } else if(num===3){
-        document.getElementById('surprise3').style.display="block";
-      }
-    }
-  </script>
-</body>
-</html>
+    button:hover
