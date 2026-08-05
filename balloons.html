@@ -6,9 +6,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat;
       text-align: center;
       font-family: 'Cinzel Decorative', cursive;
+      background: #fdf6e3;
       color: #4B2E2E;
     }
     h1 {
@@ -49,6 +49,19 @@
       border: 4px solid #8B0000;
       border-radius: 12px;
     }
+    p { font-size: 22px; margin-top: 20px; }
+    button {
+      padding: 12px 28px;
+      font-size: 20px;
+      cursor: pointer;
+      margin-top: 30px;
+      background: linear-gradient(#FFD700, #DAA520);
+      border: 3px solid #8B0000;
+      border-radius: 10px;
+      color: #4B2E2E;
+      font-weight: bold;
+    }
+    button:hover { background: linear-gradient(#DAA520, #FFD700); transform: scale(1.1); }
   </style>
 </head>
 <body>
@@ -65,5 +78,8 @@
   <img src="your-picture.jpg" alt="Celebration Picture">
 
   <p>🎉 Happy Birthday and Congratulations! 🎉</p>
+
+  <!-- Option to go back or restart -->
+  <button onclick="window.location.href='index.html'">Back to Start</button>
 </body>
 </html>
