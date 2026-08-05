@@ -3,41 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Birthday Balloon Challenge</title>
-  <!-- Load fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
   <style>
-    body {
-      text-align: center;
-      font-family: 'Comic Neue', cursive;
-      background: #fdf6e3;
-      color: #4B2E2E;
+    body { text-align:center; font-family:'Comic Neue',cursive; background:#fdf6e3; color:#4B2E2E; }
+    h1 { margin-top:40px; font-size:42px; color:#8B0000; text-shadow:2px 2px #FFD700; font-family:'Cinzel Decorative',cursive; }
+    .balloon { display:inline-block; margin:20px; width:100px; height:130px; border-radius:50%; position:relative; animation:float 6s ease-in-out infinite; cursor:pointer; }
+    .balloon:after { content:""; position:absolute; bottom:-30px; left:50%; width:2px; height:30px; background:#333; }
+    .red{background:radial-gradient(circle at 30% 30%,#FF6347,#8B0000);} 
+    .green{background:radial-gradient(circle at 30% 30%,#32CD32,#006400);} 
+    .purple{background:radial-gradient(circle at 30% 30%,#9370DB,#4B0082);}
+    @keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-40px);}100%{transform:translateY(0);}}
+    .surprise{margin-top:20px;font-size:22px;font-weight:bold;color:#8B0000;display:none;}
+    .photos{margin-top:15px;}
+    .photos img{max-width:250px;margin:10px;border:4px solid #8B0000;border-radius:12px;display:none;}
+    .link{margin-top:20px;font-size:20px;display:none;}
+    .link a{color:#006400;text-decoration:underline;font-weight:bold;}
+    button{padding:12px 28px;font-size:20px;cursor:pointer;margin-top:30px;background:linear-gradient(#FFD700,#DAA520);border:3px solid #8B0000;border-radius:10px;color:#4B2E2E;font-weight:bold;}
+    button:hover{background:linear-gradient(#DAA520,#FFD700);transform:scale(1.1);}
+  </style>
+</head>
+<body>
+  <h1>🎈 Birthday Balloon Challenge 🎈</h1>
+  <div>
+    <div class="balloon red" onclick="showSurprise(1)"></div>
+    <div class="balloon green" onclick="showSurprise(2)"></div>
+    <div class="balloon purple" onclick="showSurprise(3)"></div>
+  </div>
+
+  <!-- Surprises -->
+  <p id="surprise1" class="surprise">Balloon 1: 2026 - 1995? You are now 31 years old!</p>
+  <p id="surprise2" class="surprise">Balloon 2: Here’s a smiling surprise picture just for you!</p>
+  <div class="photos">
+    <img id="photo1" src="" alt="Surprise Photo 1">
+    <img id="photo2" src="" alt="Surprise Photo 2">
+  </div>
+  <!-- Link trigger -->
+  <p id="link2" class="link">👉 <a href="https://example.com" target="_blank">Click here for your extra surprise!</a></p>
+
+  <p id="surprise3" class="surprise">Balloon 3: Oops, no gift here… The real gift is the adventure we shared and the ones still to come — Happy Birthday!</p>
+
+  <p style="margin-top:30px;font-size:24px;font-family:'Cinzel Decorative',cursive;">🎉 Happy Birthday and Congratulations! 🎉</p>
+
+  <button onclick="window.location.href='index.html'">Back to Start</button>
+
+  <script>
+    function showSurprise(num){
+      if(num===1){
+        document.getElementById('surprise1').style.display="block";
+      } else if(num===2){
+        document.getElementById('surprise2').style.display="block";
+        document.getElementById('photo1').style.display="inline-block";
+        document.getElementById('photo2').style.display="inline-block";
+        document.getElementById('photo1').src="surprise1.jpg";
+        document.getElementById('photo2').src="surprise2.jpg";
+        document.getElementById('link2').style.display="block"; // show link
+      } else if(num===3){
+        document.getElementById('surprise3').style.display="block";
+      }
     }
-    h1 {
-      margin-top: 40px;
-      font-size: 42px;
-      color: #8B0000;
-      text-shadow: 2px 2px #FFD700;
-      font-family: 'Cinzel Decorative', cursive;
-    }
-    .balloon {
-      display: inline-block;
-      margin: 20px;
-      width: 100px;
-      height: 130px;
-      border-radius: 50%;
-      position: relative;
-      animation: float 6s ease-in-out infinite;
-      cursor: pointer;
-    }
-    .balloon:after {
-      content: "";
-      position: absolute;
-      bottom: -30px;
-      left: 50%;
-      width: 2px;
-      height: 30px;
-      background: #333;
-    }
-    .red { background: radial-gradient(circle at 30% 30%, #FF6347, #8B0000); }
-    .green { background: radial-gradient(circle at 30% 30%, #32CD32, #006400); }
-    .purple { background: radial-gradient(circle at 30% 30
+  </script>
+</body>
+</html>
