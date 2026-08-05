@@ -4,36 +4,65 @@
   <meta charset="UTF-8">
   <title>Code Quest Adventure - Question 2</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('https://i.imgur.com/2JYQZ5U.jpg') center/cover no-repeat;
-      color: white;
+      background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat;
+      color: #4B2E2E;
       text-align: center;
-      font-family: 'Trebuchet MS', sans-serif;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 22px;
     }
-    h2 { margin-top: 50px; }
+    h2 {
+      margin-top: 50px;
+      font-size: 42px;
+      color: #8B0000;
+      text-shadow: 2px 2px #FFD700;
+    }
+    p { font-size: 26px; margin-top: 20px; }
+    input {
+      padding: 10px;
+      font-size: 20px;
+      margin-top: 20px;
+      border: 2px solid #8B0000;
+      border-radius: 8px;
+    }
     button {
-      padding: 12px 24px;
-      font-size: 18px;
+      padding: 12px 28px;
+      font-size: 22px;
       cursor: pointer;
       margin-top: 20px;
+      background: linear-gradient(#FFD700, #DAA520);
+      border: 3px solid #8B0000;
+      border-radius: 10px;
+      color: #4B2E2E;
+      font-weight: bold;
     }
+    button:hover { background: linear-gradient(#DAA520, #FFD700); transform: scale(1.1); }
+    .result { margin-top: 20px; font-size: 24px; font-weight: bold; display: none; }
   </style>
 </head>
 <body>
-  <h2>Question 2</h2>
-  <p>Is the Sun a star?</p>
-  <button onclick="checkAnswer()">Answer</button>
+  <h2>QUESTION 2</h2>
+  <p>WHICH CIVILIZATION INVENTED CUNEIFORM, THE EARLIEST KNOWN WRITING SYSTEM?</p>
+  <input type="text" id="answerBox" placeholder="Type your answer here">
+  <br>
+  <button onclick="checkAnswer()">Submit</button>
+  <div class="result" id="resultMsg"></div>
 
   <script>
     function checkAnswer() {
-      let answer = prompt("Is the Sun a star?");
-      if(answer.toLowerCase() === "yes") {
-        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
-        alert("Correct! 🎉 You solved Puzzle 2!");
-        window.location.href = "final.html";
+      const userAnswer = document.getElementById('answerBox').value.trim().toLowerCase();
+      const resultMsg = document.getElementById('resultMsg');
+      if (userAnswer === "sumerians") {
+        resultMsg.style.display = 'block';
+        resultMsg.style.color = 'green';
+        resultMsg.textContent = "Correct! It is the Sumerians!";
+        confetti();
       } else {
-        alert("Wrong! Try again.");
+        resultMsg.style.display = 'block';
+        resultMsg.style.color = 'red';
+        resultMsg.textContent = "Oops! Try again.";
       }
     }
   </script>
