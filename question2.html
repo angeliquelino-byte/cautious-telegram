@@ -57,7 +57,7 @@
       if (userAnswer === "sumerians") {
         resultMsg.style.display = 'block';
         resultMsg.style.color = 'green';
-        resultMsg.textContent = "Correct! It is the Sumerians!";
+        resultMsg.innerHTML = "Correct! It is the Sumerians! <br><br><a href='final.html'><button>Next Page</button></a>";
         confetti();
       } else {
         resultMsg.style.display = 'block';
