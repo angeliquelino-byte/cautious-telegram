@@ -1,5 +1,3 @@
-<!-- republish trigger -->
-<!-- trigger rebuild -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,55 +6,47 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Fantasy font -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
- body {
-  background: url('https://i.imgur.com/8w7r1zM.jpg') center/cover no-repeat; /* parchment texture */
-  color: #4B2E2E; /* dark brown text */
-  text-align: center;
-  font-family: 'Cinzel Decorative', cursive;
-  font-size: 22px; /* larger default text */
-}
-
-h2 {
-  margin-top: 50px;
-  font-size: 42px; /* bigger question text */
-  color: #8B0000; /* deep red */
-  text-shadow: 2px 2px #FFD700; /* gold glow */
-}
-
-button {
-  padding: 16px 32px;
-  font-size: 22px;
-  cursor: pointer;
-  margin-top: 20px;
-  background: linear-gradient(#FFD700, #DAA520); /* gold gradient */
-  border: 3px solid #8B0000;
-  border-radius: 10px;
-  color: #4B2E2E;
-  font-weight: bold;
-}
-button:hover {
-  background: linear-gradient(#DAA520, #FFD700);
-  transform: scale(1.1);
-}
-
-</head>
-
-<body>
-  <h2>Question 1</h2>
-  <p>What number system uses only 0 and 1?</p>
-  <button onclick="checkAnswer()">Answer</button>
-
-  <script>
-    function checkAnswer() {
-      let answer = prompt("What number system uses only 0 and 1?");
-      if(answer.toLowerCase() === "binary") {
-        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
-        alert("Correct! 🎉 Moving to next question...");
-        window.location.href = "question2.html";
-      } else {
-        alert("Wrong! Try again.");
-      }
+  <style>
+    body {
+      background: url('https://i.imgur.com/8w7r1zM.jpg') center/cover no-repeat; /* parchment texture */
+      color: #4B2E2E; /* dark brown text */
+      text-align: center;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 22px; /* larger default text */
     }
-  </script>
+
+    h2 {
+      margin-top: 50px;
+      font-size: 42px; /* bigger question text */
+      color: #8B0000; /* deep red */
+      text-shadow: 2px 2px #FFD700; /* gold glow */
+    }
+
+    p {
+      font-size: 26px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 16px 32px;
+      font-size: 22px;
+      cursor: pointer;
+      margin-top: 20px;
+      background: linear-gradient(#FFD700, #DAA520); /* gold gradient */
+      border: 3px solid #8B0000;
+      border-radius: 10px;
+      color: #4B2E2E;
+      font-weight: bold;
+    }
+    button:hover {
+      background: linear-gradient(#DAA520, #FFD700);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>QUESTION 1</h2>
+  <p>WHAT NUMBER SYSTEM USES ONLY 0 AND 1?</p>
+  <button onclick="alert('Correct! It is Binary!')">Answer</button>
 </body>
 </html>
