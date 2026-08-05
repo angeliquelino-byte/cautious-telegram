@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Balloon Challenge</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      background: url('https://i.imgur.com/2JYQZ5U.jpg') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      font-family: 'Trebuchet MS', sans-serif;
+    }
+    h2 { margin-top: 40px; font-size: 28px; }
+    .balloon {
+      width: 100px;
+      height: 130px;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 30px;
+      cursor: pointer;
+      position: relative;
+    }
+    #b1 { background: red; }
+    #b2 { background: blue; }
+    #b3 { background: green; }
+    .string {
+      width: 2px;
+      height: 40px;
+      background: white;
+      margin: 0 auto;
+    }
+    img {
+      margin: 20px;
+      border: 3px solid white;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎈 Birthday Balloon Challenge 🎈</h2>
+  <p>Pop the balloons to reveal surprises!</p>
+
+  <div id="b1" class="balloon" onclick="popBalloon(1)">
+    <div class="string"></div>
+  </div>
+  <div id="b2" class="balloon" onclick="popBalloon(2)">
+    <div class="string"></div>
+  </div>
+  <div id="b3" class="balloon" onclick="popBalloon(3)">
+    <div class="string"></div>
+  </div>
+
+  <script>
+    function popBalloon(num) {
+      if(num === 1) {
+        let answer = prompt("2026 - 1995?");
+        if(answer === "31") {
+          confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
+          alert("You are right! 🎉 You are now 31 years old!");
+        } else {
+          alert("Wrong! Try again.");
+        }
+      } else if(num === 2) {
+        confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 } });
+        alert("🎂 Happy Birthday! 🎂");
+        // Replace these with your own photo URLs
+        document.body.innerHTML += '<img src="your_photo1.jpg" width="200"><img src="your_photo2.jpg" width="200">';
+      } else if(num === 3) {
+        confetti({ particleCount: 400, spread: 120, origin: { y: 0.6 } });
+        alert("🎁 Surprise unlocked! 🎁");
+      }
+    }
+  </script>
+</body>
+</html>
