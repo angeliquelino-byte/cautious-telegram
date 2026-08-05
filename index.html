@@ -4,29 +4,22 @@
   <meta charset="UTF-8">
   <title>Code Quest Adventure - Question 1</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Fantasy font -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat; /* parchment texture */
+      background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat;
       color: #4B2E2E;
       text-align: center;
       font-family: 'Cinzel Decorative', cursive;
       font-size: 22px;
     }
-
     h2 {
       margin-top: 50px;
       font-size: 42px;
       color: #8B0000;
       text-shadow: 2px 2px #FFD700;
     }
-
-    p {
-      font-size: 26px;
-      margin-top: 20px;
-    }
-
+    p { font-size: 26px; margin-top: 20px; }
     input {
       padding: 10px;
       font-size: 20px;
@@ -34,7 +27,6 @@
       border: 2px solid #8B0000;
       border-radius: 8px;
     }
-
     button {
       padding: 12px 28px;
       font-size: 22px;
@@ -46,22 +38,13 @@
       color: #4B2E2E;
       font-weight: bold;
     }
-    button:hover {
-      background: linear-gradient(#DAA520, #FFD700);
-      transform: scale(1.1);
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      display: none;
-    }
+    button:hover { background: linear-gradient(#DAA520, #FFD700); transform: scale(1.1); }
+    .result { margin-top: 20px; font-size: 24px; font-weight: bold; display: none; }
   </style>
 </head>
 <body>
   <h2>QUESTION 1</h2>
-  <p>WHAT NUMBER SYSTEM USES ONLY 0 AND 1?</p>
+  <p>WHAT LANGUAGE DO COMPUTERS UNDERSTAND?</p>
   <input type="text" id="answerBox" placeholder="Type your answer here">
   <br>
   <button onclick="checkAnswer()">Submit</button>
@@ -74,7 +57,7 @@
       if (userAnswer === "binary") {
         resultMsg.style.display = 'block';
         resultMsg.style.color = 'green';
-        resultMsg.textContent = "Correct! It is Binary!";
+        resultMsg.innerHTML = "Correct! It is Binary! <br><br><a href='question2.html'><button>Next Question</button></a>";
         confetti();
       } else {
         resultMsg.style.display = 'block';
