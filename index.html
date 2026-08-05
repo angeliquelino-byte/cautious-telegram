@@ -12,12 +12,12 @@
       color: #4B2E2E; /* dark brown text */
       text-align: center;
       font-family: 'Cinzel Decorative', cursive;
-      font-size: 22px; /* larger default text */
+      font-size: 22px;
     }
 
     h2 {
       margin-top: 50px;
-      font-size: 42px; /* bigger question text */
+      font-size: 42px;
       color: #8B0000; /* deep red */
       text-shadow: 2px 2px #FFD700; /* gold glow */
     }
@@ -42,11 +42,27 @@
       background: linear-gradient(#DAA520, #FFD700);
       transform: scale(1.1);
     }
+
+    .correct {
+      margin-top: 20px;
+      font-size: 24px;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <h2>QUESTION 1</h2>
   <p>WHAT NUMBER SYSTEM USES ONLY 0 AND 1?</p>
-  <button onclick="alert('Correct! It is Binary!')">Answer</button>
+  <button onclick="showCorrect()">Answer</button>
+  <div class="correct" id="correctMsg">Correct! It is Binary!</div>
+
+  <script>
+    function showCorrect() {
+      document.getElementById('correctMsg').style.display = 'block';
+      confetti();
+    }
+  </script>
 </body>
 </html>
