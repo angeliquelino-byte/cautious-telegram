@@ -25,6 +25,7 @@
       border-radius: 50%;
       position: relative;
       animation: float 6s ease-in-out infinite;
+      cursor: pointer;
     }
     .balloon:after {
       content: "";
@@ -67,19 +68,34 @@
 <body>
   <h1>🎈 Birthday Balloon Challenge 🎈</h1>
   <div>
-    <div class="balloon red"></div>
-    <div class="balloon green"></div>
-    <div class="balloon purple"></div>
+    <div class="balloon red" onclick="popBalloon(this,1)"></div>
+    <div class="balloon green" onclick="popBalloon(this,2)"></div>
+    <div class="balloon purple" onclick="popBalloon(this,3)"></div>
   </div>
 
-  <p>Pop the balloons to reveal surprises!</p>
+  <p id="message">Pop the balloons to reveal surprises!</p>
 
-  <!-- Picture placeholder: swap the src anytime -->
-  <img src="your-picture.jpg" alt="Celebration Picture">
+  <!-- Picture placeholder -->
+  <img src="" alt="Celebration Picture">
 
   <p>🎉 Happy Birthday and Congratulations! 🎉</p>
 
-  <!-- Option to go back or restart -->
   <button onclick="window.location.href='index.html'">Back to Start</button>
+
+  <script>
+    function popBalloon(element, num) {
+      // Remove the balloon (simulate popping)
+      element.style.display = "none";
+
+      const msg = document.getElementById('message');
+      if (num === 1) {
+        msg.textContent = "Balloon 1: 2026 - 1995? You are now 31 years old!";
+      } else if (num === 2) {
+        msg.textContent = "Balloon 2: Here’s a smiling surprise picture just for you!";
+      } else if (num === 3) {
+        msg.textContent = "Balloon 3: Oops, no gift here… The real gift is the adventure we shared and the ones still to come — Happy Birthday!";
+      }
+    }
+  </script>
 </body>
 </html>
