@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adventure Quest — Birthday Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#f5d27a;
+      --accent-2:#ffd166;
+      --paper:#e9d8b7;
+      --ink:#2b1b0d;
+      --glow:0 0 16px rgba(255,210,120,0.9);
+      --btn:#7d5a50;
+    }
+    html,body{height:100%;margin:0;font-family:system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:var(--ink);}
+    body{
+      background: linear-gradient(180deg,#f3e9d2 0%, #e7d3ae 50%, #e6d0a9 100%);
+      display:flex;align-items:center;justify-content:center;padding:28px;
+      background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-size:12px 12px;
+    }
+    .paper{
+      width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.4), rgba(255,255,255,0.05));
+      border-radius:12px;padding:28px 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.6);
+      border:6px solid rgba(100,60,30,0.12);
+      position:relative;overflow:hidden;
+    }
+    header h1{font-family:'Uncial Antiqua', 'Cinzel', serif;font-size:48px;margin:0;color:#3d2b18;text-shadow:0 0 8px rgba(255,220,120,0.85);}
+    header p{margin:6px 0 18px;font-family: 'Cinzel', serif;color:#5b422b}
+    .flow{display:grid;grid-template-columns:1fr 360px;gap:20px}
+    .stage{background:rgba(255,255,255,0.6);padding:20px;border-radius:10px;min-height:320px}
+    .panel{background:rgba(0,0,0,0.02);padding:18px;border-radius:10px;border:1px dashed rgba(0,0,0,0.04)}
+    .question{font-weight:700;margin-bottom:12px;font-family:'Cinzel',serif;color:#3b2a1a;text-shadow:var(--glow);}
+    .options{display:flex;flex-direction:column;gap:10px}
+    button.option{background:linear-gradient(180deg,#fff8e6,#fff0d1);border:2px solid rgba(60,40,20,0.08);padding:12px 14px;border-radius:8px;text-align:left;cursor:pointer;transition:transform .12s, box-shadow .12s;box-shadow:0 6px 12px rgba(0,0,0,0.06)}
+    button.option:hover{transform:translateY(-4px);box-shadow:0 18px 30px rgba(0,0,0,0.12);outline:none}
+    button.option .taglish{font-style:italic;color:#5b3a2c}
+    .hint{font-size:14px;color:#6b4f3f;margin-top:6px}
+    .hidden{display:none}
+    .meta{font-size:14px;color:#6b4f3f}
+    .glow-on-hover:hover{text-shadow:0 0 18px rgba(255,215,120,0.95)}
+    .progress{height:10px;background:rgba(0,0,0,0.06);border-radius:6px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,#ffd166,#ffb703);width:0%;transition:width .5s}
+    .award-btn{display:inline-block;margin-top:18px;padding:12px 18px;background:linear-gradient(180deg,#ffd166,#ffb703);border-radius:10px;color:#2b1606;font-weight:700;border:none;cursor:pointer;box-shadow:var(--glow);}
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:50}
+    .modal .card{background:var(--paper);padding:28px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6);text-align:center}
+    .modal h2{font-family:'Uncial Antiqua', 'Cinzel', serif;margin:0 0 8px}
+    /* balloons */
+    .balloon-area{display:flex;gap:18px;align-items:flex-end;justify-content:center;margin-top:18px}
+    .balloon{width:120px;height:160px;border-radius:60% 60% 50% 50%;position:relative;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;cursor:pointer;transform-origin:center bottom;transition:transform .5s}
+    .balloon:after{content:'';position:absolute;bottom:-24px;width:2px;height:24px;background:rgba(0,0,0,0.06)}
+    .red{background:linear-gradient(180deg,#e53935,#b71c1c);box-shadow:0 8px 24px rgba(229,57,53,0.35)}
+    .green{background:linear-gradient(180deg,#43a047,#087f23);box-shadow:0 8px 24px rgba(67,160,71,0.35)}
+    .purple{background:linear-gradient(180deg,#8e24aa,#4a148c);box-shadow:0 8px 24px rgba(142,36,170,0.35)}
+    .balloon.pop{transform:scale(0);opacity:0;transition:transform .3s,opacity .3s}
+    .surprise-img{max-width:100%;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.2);}
+    footer{margin-top:12px;text-align:right;color:#6b4f3f;font-size:13px}
+    /* small screens */
+    @media (max-width:900px){.flow{grid-template-columns:1fr;}.panel{min-height:unset}}
+  </style>
+</head>
+<body>
+  <div class="paper">
+    <header>
+      <h1 class="glow-on-hover">Adventure Quest: Birthday Edition</h1>
+      <p>Handa ka na ba? Isang magaan na paalaala: "PS: No need to review. Stock knowledge will do. No using of AI!" 😂</p>
+    </header>
+
+    <div class="flow">
+      <div class="stage" id="main-stage">
+        <div id="intro" class="panel">
+          <h2 class="question">Intro</h2>
+          <p class="meta">Welcome, brave traveler. Your quest is simple: answer the riddles and prove your wisdom. Proceed with a light heart (and accurate answers).</p>
+          <div style="margin-top:12px">
+            <button class="award-btn" id="start-quest">Start the Quest</button>
+          </div>
+        </div>
+
+        <div id="easy" class="panel hidden">
+          <h2 class="question">🟢 Easy General Questions</h2>
+          <div id="easy-questions"></div>
+        </div>
+
+        <div id="hard" class="panel hidden">
+          <h2 class="question">🔴 Difficult Practical Questions</h2>
+          <div id="hard-questions"></div>
+        </div>
+
+        <div id="award" class="panel hidden">
+          <h2 class="question">🎁 Claim Your Award</h2>
+          <p class="meta">All challenges complete. Click the button below to claim your reward — at your own risk. 😉</p>
+          <button class="award-btn" id="claim">Please click and get ready to claim your award.</button>
+        </div>
+
+        <div id="balloons" class="panel hidden">
+          <h2 class="question">🎈 Balloon Surprise</h2>
+          <div class="balloon-area">
+            <div class="balloon red" id="balloon-1">1</div>
+            <div class="balloon green" id="balloon-2">2</div>
+            <div class="balloon purple" id="balloon-3">3</div>
+          </div>
+          <div id="balloon-message" style="margin-top:14px;text-align:center"></div>
+        </div>
+      </div>
+
+      <aside class="stage panel">
+        <div class="progress" title="Quest progress"><i id="progbar"></i></div>
+        <div style="margin-top:12px">
+          <p class="meta">Answer all questions to unlock the award. Glowing options when hovered, witty Taglish messages on choices.</p>
+          <div style="margin-top:12px" id="score">Score: 0 / 8</div>
+        </div>
+        <div style="margin-top:14px" id="hintbox" class="meta">Hints will appear here...</div>
+      </aside>
+    </div>
+
+    <footer>Quest by Copilot-style helper — witty, techy, and a little dramatic.</footer>
+  </div>
+
+  <!-- Modal template -->
+  <div id="modal" class="modal hidden">
+    <div class="card">
+      <h2>Oppps got ya…</h2>
+      <p>Looks like someone couldn't resist a little surprise. Enjoy the balloons!</p>
+      <div style="margin-top:12px"><button class="award-btn" id="modal-close">Continue</button></div>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas" style="position:fixed;pointer-events:none;inset:0;z-index:60" width="800" height="600"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    // QUESTIONS data
+    const easyQs = [
+      {q:"What language do computers understand?", a:"Binary", opts:["Binary","HTML","English","JavaScript"], witty: ["Tama ka! Binary na ang puso ng makina.","Ay hindi — that's markup!","Try again — not human talk.","Close pero hindi." ]},
+      {q:"Which civilization invented cuneiform, the earliest known writing system?", a:"Sumerians", opts:["Romans","Sumerians","Greeks","Egyptians"], witty:["Nope.","Tama! Ancient scribes approved.","Not quite.","They had hieroglyphs instead."]},
+      {q:"What is the largest organ in the human body?", a:"Skin", opts:["Liver","Heart","Skin","Brain"], witty:["Nice try.","Close, pero hindi.","Correct — skin is the OG cover!","Smart but not this time."]}
+    ];
+
+    const hardQs = [
+      {q:"What should a responsible driver do when the traffic light turns yellow?", a:"Slow down and prepare to stop", opts:["Sabihin “kaya pa ‘to!” habang dinidiinan ang gas","Magdasal habang tumatawid sa intersection","Slow down and prepare to stop","Bilisan kasi baka maunahan ka ng red light"], witty:["Ay naku, reckless.","Prayer is good, pero hindi practical.","Correct — safety muna.","Huwag naman, delikado."]},
+
+      {q:"What does a solid white line on the road usually mean?", a:"Avoid crossing or changing lanes unless permitted because it separates traffic lanes", opts:["Pwede lumipat ng lane basta mabilis ang kotse","Road decoration lang para hindi boring tingnan","Avoid crossing or changing lanes unless permitted because it separates traffic lanes","Signal na pwede mag-overtake kapag walang enforcer"], witty:["Hindi pwede yan.","Cute, pero hindi.","Tama — safety first.","Enforcers don't change the rule!"]},
+
+      {q:"What is the maximum speed limit on a national highway (when conditions are safe and no lower speed limit is posted)?", a:"100 km/h", opts:["120 km/h — \"Maluwag naman ang daan, kaya pa yan!\" 😎","80 km/h — \"Safe na yan, hindi naman ako nagmamadali.\"","100 km/h — \"Hindi pa naman lumilipad ang kotse, sakto lang!\" 😂","150 km/h — \"Testing lang kung gaano kalakas makina.\""], witty:["Too fast.","Too slow.","Correct — 100 km/h.","Stop; no racing."]},
+
+      {q:"A person suddenly faints. What should you do?", a:"Check their breathing and make sure they are safe", opts:["Bigyan agad ng tubig kahit hindi pa gising","Check their breathing and make sure they are safe","Paupuin agad para hindi mahiga","Sampalin ng konti para magising"], witty:["Don't give water to an unconscious person.","Correct — ABCs first.","Not always safe.","Nope; be gentle."]},
+
+      {q:"What should you do during an earthquake while you are inside a building?", a:"Drop, Cover, and Hold On until the shaking stops and pray for God’s protection 🙂", opts:["Sumigaw ng “MAMA!” habang naghahanap ng matatakbuhan 😂","Run outside immediately kahit may nahuhulog na bagay","Drop, Cover, and Hold On until the shaking stops and pray for God’s protection 🙂","Mag‑video muna para may emergency content"], witty:["Relatable, pero not helpful.","Dangerous — don't run outside.","Correct — Drop, Cover, Hold On.","Don't be that person."]}
+    ];
+
+    // state
+    let currentStage = 'intro';
+    let easyIndex = 0, hardIndex = 0;
+    let score = 0, total = easyQs.length + hardQs.length;
+
+    const startBtn = document.getElementById('start-quest');
+    const introEl = document.getElementById('intro');
+    const easyEl = document.getElementById('easy');
+    const hardEl = document.getElementById('hard');
+    const awardEl = document.getElementById('award');
+    const balloonsEl = document.getElementById('balloons');
+    const scoreEl = document.getElementById('score');
+    const prog = document.getElementById('progbar');
+    const hint = document.getElementById('hintbox');
+
+    function updateProgress(){
+      prog.style.width = `${Math.round((score/total)*100)}%`;
+      scoreEl.textContent = `Score: ${score} / ${total}`;
+    }
+
+    function createQuestionBlock(item, idx, onAnswer){
+      const wrap = document.createElement('div');
+      wrap.style.marginBottom='14px';
+      const q = document.createElement('div'); q.className='question'; q.textContent = item.q; wrap.appendChild(q);
+      const opts = document.createElement('div'); opts.className='options';
+      item.opts.forEach((o,i)=>{
+        const b = document.createElement('button'); b.className='option'; b.innerHTML = `<div>${o}</div>`;
+        b.addEventListener('click', ()=>{
+          const correct = (o === item.a);
+          if(correct){
+            b.style.borderColor = '#60a918';
+            score += 1;
+            updateProgress();
+          } else {
+            b.style.borderColor = '#c0392b';
+          }
+          // show witty
+          hint.textContent = item.witty[item.opts.indexOf(o)] || '';
+          // disable buttons
+          Array.from(opts.children).forEach(x=>x.disabled=true);
+          // Call onAnswer after short delay
+          setTimeout(()=>onAnswer(correct),600);
+        });
+        opts.appendChild(b);
+      });
+      wrap.appendChild(opts);
+      return wrap;
+    }
+
+    function showEasy(){
+      introEl.classList.add('hidden');
+      easyEl.classList.remove('hidden');
+      currentStage='easy';
+      renderEasy();
+    }
+
+    function renderEasy(){
+      const container = document.getElementById('easy-questions');
+      container.innerHTML='';
+      if(easyIndex >= easyQs.length){
+        // go to hard
+        easyEl.classList.add('hidden');
+        hardEl.classList.remove('hidden');
+        renderHard();
+        return;
+      }
+      const block = createQuestionBlock(easyQs[easyIndex], easyIndex, (ok)=>{
+        easyIndex +=1; renderEasy();
+      });
+      container.appendChild(block);
+    }
+
+    function renderHard(){
+      currentStage='hard';
+      const container = document.getElementById('hard-questions');
+      container.innerHTML='';
+      if(hardIndex >= hardQs.length){
+        hardEl.classList.add('hidden');
+        awardEl.classList.remove('hidden');
+        return;
+      }
+      const block = createQuestionBlock(hardQs[hardIndex], hardIndex, (ok)=>{
+        hardIndex +=1; renderHard();
+      });
+      container.appendChild(block);
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      showEasy();
+    });
+
+    document.getElementById('claim').addEventListener('click', ()=>{
+      // show modal (error popup)
+      document.getElementById('modal').classList.remove('hidden');
+      // small confetti tease
+      confetti({particleCount:60,spread:60,origin:{y:0.2}});
+    });
+    document.getElementById('modal-close').addEventListener('click', ()=>{
+      document.getElementById('modal').classList.add('hidden');
+      // reveal balloons
+      awardEl.classList.add('hidden');
+      balloonsEl.classList.remove('hidden');
+      // gentle confetti and balloon float
+      confetti({particleCount:100,spread:120,origin:{y:0.1}});
+      floatBalloons();
+    });
+
+    function floatBalloons(){
+      const b1 = document.getElementById('balloon-1');
+      const b2 = document.getElementById('balloon-2');
+      const b3 = document.getElementById('balloon-3');
+      [b1,b2,b3].forEach((b,i)=>{
+        b.style.transition = 'transform 2s ease-in-out';
+        setTimeout(()=>{ b.style.transform = `translateY(${ -30 - i*10 }px)`; }, 100);
+      });
+    }
+
+    // Balloon interactions
+    document.getElementById('balloon-1').addEventListener('click', ()=>{
+      document.getElementById('balloon-message').innerHTML = "<strong>31 Years kana nganiii!</strong>";
+      // pop animation
+      popBalloon('balloon-1');
+      confetti({particleCount:40,spread:40,colors:['#ff4d4d']});
+    });
+    document.getElementById('balloon-2').addEventListener('click', ()=>{
+      // show surprise pictures — placeholder image
+      document.getElementById('balloon-message').innerHTML = `<img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop&s=placeholder" alt="surprise" class="surprise-img" />`;
+      popBalloon('balloon-2');
+      confetti({particleCount:50,spread:60,colors:['#4caf50']});
+    });
+    document.getElementById('balloon-3').addEventListener('click', ()=>{
+      document.getElementById('balloon-message').innerHTML = `<h3>Happy Birthday!</h3>`;
+      popBalloon('balloon-3');
+      // big confetti finale
+      confetti({particleCount:300,spread:160,origin:{y:0.2}});
+    });
+
+    function popBalloon(id){
+      const el = document.getElementById(id);
+      el.classList.add('pop');
+      setTimeout(()=>{ el.style.display='none'; },400);
+    }
+
+    // initialize
+    updateProgress();
+    // show award button only when all done
+    const claimBtn = document.getElementById('claim');
+    // observe changes in easyIndex/hardIndex by invoking checkComplete on each answer (already handled when advancing stages)
+
+    // When award panel becomes visible (after finishing hard), show claim
+    const observer = new MutationObserver(()=>{
+      if(!awardEl.classList.contains('hidden')){
+        // reveal claim only when user truly completed all questions
+        if(score >= 0){ /* nothing */ }
+      }
+    });
+    observer.observe(awardEl, {attributes:true,attributeFilter:['class']});
+
+    // make sure the claim button's click only appears after sequence: we'll show award when done
+    // detect completion by watching DOM transitions — simpler: after hard questions rendered and index beyond, award revealed (already handled above)
+
+    // keyboard accessibility: allow Enter on focused option
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && document.activeElement.classList.contains('option')){
+        document.activeElement.click();
+      }
+    });
+
+    // After all answers are submitted, show the award panel automatically
+    function checkIfAllDone(){
+      if(easyIndex>=easyQs.length && hardIndex>=hardQs.length){
+        awardEl.classList.remove('hidden');
+      }
+    }
+
+    // monkey-patch render functions to call check
+    const oldRenderEasy = renderEasy;
+    renderEasy = function(){ oldRenderEasy(); checkIfAllDone(); };
+    const oldRenderHard = renderHard;
+    renderHard = function(){ oldRenderHard(); checkIfAllDone(); };
+
+    // small UI polish: show witty hint for each question set
+    hint.textContent = "Good luck, ka-quest! Sagot muna bago mag-LOL.";
+
+  </script>
+</body>
+</html>
