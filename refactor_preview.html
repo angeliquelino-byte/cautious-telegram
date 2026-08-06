@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Adventure Quest — Refactor (Preview)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#071028; --paper:#0b1220; --gold:#ffd873; --accent:#7c3aed }
+    body{ font-family:'Cinzel Decorative', 'Uncial Antiqua', serif; background:linear-gradient(180deg,var(--bg), #0b1220); color:#f5f7fb; margin:0; padding:28px }
+    .wrap{ max-width:980px; margin:0 auto }
+    h1{ text-align:center; color:var(--gold); font-size:44px; text-shadow:0 8px 40px rgba(124,58,237,0.12) }
+    .quest{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:16px; border-radius:12px; margin:18px 0 }
+    .qtext{ font-weight:800; color:#e6f4ff }
+    .options button{ display:block; width:100%; margin:8px 0; padding:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); border:1px solid rgba(255,255,255,0.04); color:#fff }
+    .reveal{ display:none; color:var(--accent); font-weight:900 }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>⚔️ Adventure Quest — Refactor Preview</h1>
+    <div class="quest">
+      <div class="qtext">⚔️ Quest Challenge: The machines whisper only one tongue. What is it?</div>
+      <div class="options">
+        <button>A) English</button>
+        <button>B) Tagalog</button>
+        <button data-correct>C) Binary</button>
+        <button>D) Emoji</button>
+      </div>
+      <div class="reveal">Correct: C) Binary — The ancient language of 0s and 1s.</div>
+    </div>
+
+    <p style="text-align:center; color:#cfe9ff;">This branch contains the full copy refactor using fantasy/medieval tone, Taglish distractors, parchment backgrounds, and glowing reveals. Review and merge when ready.</p>
+  </div>
+</body>
+</html>
