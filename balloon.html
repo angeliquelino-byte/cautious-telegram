@@ -14,13 +14,15 @@
     .purple { background:radial-gradient(circle at 30% 30%, #6a5acd, #2f2f6a); }
     @keyframes float { 0%{transform:translateY(0);} 50%{transform:translateY(-40px);} 100%{transform:translateY(0);} }
     .surprise { margin-top:20px; font-size:22px; font-weight:bold; color:#5c4033; display:none; }
-    .scatter { position:relative; width:100%; height:500px; margin-top:20px; } /* fixed height */
-    .scatter img { position:absolute; width:150px; border:4px solid #5c4033; border-radius:12px; display:none; object-fit:cover; transition:transform .5s, opacity .5s; }
+    /* make the scatter area tighter and enlarge photos */
+    .scatter { position:relative; width:100%; height:420px; margin-top:20px; max-width:1100px; margin-left:auto; margin-right:auto; }
+    .scatter img { position:absolute; width:240px; max-width:36%; border:4px solid #5c4033; border-radius:12px; display:none; object-fit:cover; transition:transform .5s, opacity .5s; box-shadow:0 6px 18px rgba(0,0,0,0.15); }
     .link { margin-top:20px; font-size:20px; display:none; }
     .link a { color:#3c763d; text-decoration:underline; font-weight:bold; }
     button { padding:12px 28px; font-size:20px; cursor:pointer; margin-top:30px; background:linear-gradient(#d2b48c,#a67c52); border:3px solid #5c4033; border-radius:10px; color:#3b2f2f; font-weight:700; }
-    button:hover { background:linear-gradient(#a67c52,#d2b48c); transform:scale(1.1); }
-    @media (max-width:480px){ .scatter { height:700px; } .scatter img { width:120px; } }
+    button:hover { background:linear-gradient(#a67c52,#d2b48c); transform:scale(1.05); }
+    @media (max-width:900px){ .scatter img { width:200px; } .scatter { height:620px; } }
+    @media (max-width:600px){ .scatter img { width:160px; } .scatter { height:820px; } }
   </style>
 </head>
 <body>
@@ -57,16 +59,17 @@
         document.getElementById('surprise1').style.display="block";
       } else if(num===2){
         document.getElementById('surprise2').style.display="block";
+        // tighter positions so photos are larger and centered
         const positions = [
-          {top: "25%", left: "20%", rot: -8, z: 3},
-          {top: "30%", left: "70%", rot: 6, z: 4},
-          {top: "65%", left: "40%", rot: -4, z: 2},
-          {top: "50%", left: "85%", rot: 10, z: 5}
+          {top: "35%", left: "25%", rot: -6, z: 3},
+          {top: "35%", left: "60%", rot: 6, z: 4},
+          {top: "68%", left: "38%", rot: -4, z: 2},
+          {top: "68%", left: "72%", rot: 8, z: 5}
         ];
         for(let i=1; i<=4; i++){
           const photo = document.getElementById('photo'+i);
-          // fallback if image fails to load
-          photo.onerror = function(){ this.onerror = null; this.src = 'https://via.placeholder.com/150?text=No+Image'; };
+          // fallback if image fails to load (larger placeholder)
+          photo.onerror = function(){ this.onerror = null; this.src = 'https://via.placeholder.com/400x300?text=No+Image'; };
           photo.style.display="block";
           photo.style.top = positions[i-1].top;
           photo.style.left = positions[i-1].left;
