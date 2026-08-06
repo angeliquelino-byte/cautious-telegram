@@ -384,7 +384,7 @@
         <div class="q-body">
           <div class="q-text"><strong>What should a responsible driver do when the traffic light turns yellow?</strong></div>
           <div class="options">
-            <div class="choice" data-value="A">A. Sabihin “kaya pa ‘to!” habang dinidiinan ang gas</div>
+            <div class="choice" data-value="A">A. Sabihin "kaya pa 'to!" habang dinidiinan ang gas</div>
             <div class="choice" data-value="B">B. Magdasal habang tumatawid sa intersection</div>
             <div class="choice" data-value="C">C. Slow down and prepare to stop</div>
             <div class="choice" data-value="D">D. Bilisan kasi baka maunahan ka ng red light</div>
@@ -441,9 +441,9 @@
         <div class="q-body">
           <div class="q-text"><strong>What should you do during an earthquake while you are inside a building?</strong></div>
           <div class="options">
-            <div class="choice" data-value="A">A. Sumigaw ng “MAMA!” habang naghahanap ng matatakbuhan 😂</div>
+            <div class="choice" data-value="A">A. Sumigaw ng "MAMA!" habang naghahanap ng matatakbuhan 😂</div>
             <div class="choice" data-value="B">B. Run outside immediately kahit may nahuhulog na bagay</div>
-            <div class="choice" data-value="C">C. Drop, Cover, and Hold On until the shaking stops and pray for God’s protection 🙂</div>
+            <div class="choice" data-value="C">C. Drop, Cover, and Hold On until the shaking stops and pray for God's protection 🙂</div>
             <div class="choice" data-value="D">D. Mag‑video muna para may emergency content</div>
           </div>
         </div>
@@ -632,7 +632,7 @@
 
   b1.addEventListener('click', ()=> {
     // show message
-    output.innerHTML = '<div class="panel" style="display:inline-block; text-align:center;"><strong>31 Years kana nganiii!</strong><div class="muted" style="margin-top:6px">Time flies — level up na!</div></div>';
+    output.innerHTML = '<div class="panel" style="display:inline-block; text-align:center;"><strong>31 Years kana nganiii!</strong><div class="muted" style="margin-top:6px">Time flies — level unlocked. 🎂</div></div>';
     confettiBurst(40, {spread:50});
   });
 
@@ -654,7 +654,7 @@
 
   b3.addEventListener('click', ()=> {
     // final "bomb pop" — big confetti + final message
-    output.innerHTML = `<div class="panel" style="display:inline-block;"><div class="final-message">Happy Birthday! 🎉</div><div class="muted" style="margin-top:8px">From your friendly quest generator (that's me, with a hint of techy mischief).</div></div>`;
+    output.innerHTML = `<div class="panel" style="display:inline-block;"><div class="final-message">Happy Birthday! 🎉</div><div class="muted" style="margin-top:8px">From your friendly quest guide!</div></div>`;
     bigConfettiSequence();
     // animate balloon pop effect
     popBalloonVisual(b3);
@@ -761,3 +761,15 @@
       const delay = i*120;
       b.animate([
         { transform: 'translateY(60px)'},
+        { transform: 'translateY(0)' }
+      ], {
+        duration: 600,
+        delay: delay,
+        easing: 'cubic-bezier(.2,.9,.2,1)'
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
