@@ -14,6 +14,7 @@
     .purple { background:radial-gradient(circle at 30% 30%, #6a5acd, #2f2f6a); }
     @keyframes float { 0%{transform:translateY(0);} 50%{transform:translateY(-40px);} 100%{transform:translateY(0);} }
     .surprise { margin-top:20px; font-size:22px; font-weight:bold; color:#5c4033; display:none; }
+    .photos { margin-top:20px; } /* ensure container has space */
     .photos img { max-width:250px; margin:10px; border:4px solid #5c4033; border-radius:12px; display:none; }
     .link { margin-top:20px; font-size:20px; display:none; }
     .link a { color:#3c763d; text-decoration:underline; font-weight:bold; }
@@ -34,7 +35,6 @@
 
   <p id="surprise2" class="surprise">Balloon 2: Here’s your smiling surprise picture!</p>
   <div class="photos">
-    <!-- These filenames match your repo -->
     <img id="photo1" src="surprise1.jpg" alt="His Picture">
     <img id="photo2" src="surprise2.jpg" alt="Another Picture">
   </div>
@@ -48,20 +48,5 @@
 
   <button onclick="window.location.href='index.html'">Back to Start</button>
 
- <script>
-  function showSurprise(num){
-    if(num===1){
-      document.getElementById('surprise1').style.display="block";
-    } else if(num===2){
-      document.getElementById('surprise2').style.display="block";
-      document.getElementById('photo1').style.display="inline-block";
-      document.getElementById('photo2').style.display="inline-block";
-      document.getElementById('link2').style.display="block";
-    } else if(num===3){
-      document.getElementById('surprise3').style.display="block";
-    }
-  }
-</script>
-
-</body>
-</html>
+  <script>
+    function showSurprise(num){
