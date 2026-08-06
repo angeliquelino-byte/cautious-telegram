@@ -2,270 +2,319 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Birthday Balloon Challenge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <title>Adventure Quest — Birthday Balloon Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
   <style>
-    /* Page basics */
-    body { text-align:center; font-family:'Comic Neue', cursive; background:#0f1724; color:#e6eef8; position:relative; min-height:100vh; padding:32px 16px; }
-    h1 { margin-top:6px; font-size:36px; color:#dbeafe; text-shadow:0 2px 12px rgba(56,189,248,0.06); font-family:'Cinzel Decorative', cursive; }
+    :root{ --bg:#0f1724; --paper:#0b1220; --gold:#facc15; --glow:#7c3aed; --teal:#06b6d4 }
+    body{ font-family: 'Uncial Antiqua', 'Cinzel Decorative', serif; background: linear-gradient(180deg,#071028 0%, #0f1724 100%); color:#e6eef8; margin:0; padding:28px; min-height:100vh; }
+    .container{ max-width:1100px; margin:0 auto; }
+    header{ text-align:center; margin-bottom:14px }
+    h1{ font-family:'Cinzel Decorative', serif; font-size:40px; margin:6px 0; color:var(--gold); text-shadow:0 6px 30px rgba(124,58,237,0.08); }
+    .intro{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:14px 18px; border:1px solid rgba(255,255,255,0.04); box-shadow:0 12px 40px rgba(2,6,23,0.6); margin-bottom:18px }
+    .intro p{ margin:8px 0; font-size:16px }
 
-    /* final popup box (centered above balloons) */
-    .final-popup{
-      position:fixed;
-      left:50%;
-      top:8%;
-      transform:translate(-50%,-20px) scale(.98);
-      background:linear-gradient(135deg,#0f1724cc, rgba(124,58,237,0.12));
-      border:1px solid rgba(255,255,255,0.06);
-      color:#fff;
-      padding:14px 18px;
-      border-radius:14px;
-      min-width:320px;
-      max-width:760px;
-      box-shadow:0 30px 80px rgba(2,6,23,0.8), 0 8px 30px rgba(124,58,237,0.12);
-      z-index:11000;
-      opacity:0;
-      pointer-events:none;
-      transition:all 360ms cubic-bezier(.17,.67,.83,.67);
-      backdrop-filter: blur(6px) saturate(120%);
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .final-popup.visible{ transform:translate(-50%,0) scale(1); opacity:1; pointer-events:auto; }
-    .final-popup .close{ background:transparent; border:0; color:rgba(255,255,255,0.9); font-size:20px; cursor:pointer; padding:6px; border-radius:8px; }
-    .final-popup .popup-content{ text-align:left; flex:1; }
-    .final-popup .popup-title{ font-weight:900; font-size:18px; color:#fff; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
-    .final-popup .popup-body{ font-size:15px; color:#e6eef8; opacity:0.95; line-height:1.35; }
-    .final-popup .popup-cta{ margin-top:10px; background:linear-gradient(90deg,#7c3aed,#06b6d4); border:0; color:#fff; padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:800; box-shadow:0 10px 30px rgba(6,8,23,0.6); }
-    .final-popup .sparkle{ width:12px; height:12px; border-radius:3px; background:linear-gradient(180deg,#fff,#ffdede); box-shadow:0 6px 20px rgba(255,255,255,0.12); transform:rotate(18deg); }
+    /* parchment-like quest box */
+    .quest{ background: linear-gradient(180deg,#0b1522,#071028); border-radius:12px; padding:12px; margin:12px 0; border:1px solid rgba(255,255,255,0.04); }
+    .quest h2{ font-size:20px; margin:6px 0; color:var(--glow); text-shadow:0 8px 28px rgba(124,58,237,0.12) }
+    .question{ padding:10px 12px; border-radius:8px; margin:8px 0; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02)); display:flex; gap:12px; align-items:flex-start }
+    .qnum{ min-width:36px; height:36px; line-height:36px; border-radius:10px; background:linear-gradient(180deg,#0b1228,#071022); color:var(--gold); text-align:center; font-weight:900; box-shadow:0 6px 18px rgba(124,58,237,0.06) }
+    .qbody{ flex:1 }
+    .qtext{ font-weight:700; color:#dbeafe; margin-bottom:8px }
+    .options button, .short input{ width:100%; display:block; margin:6px 0; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); background:transparent; color:#e6eef8; text-align:left; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease }
+    .options button:hover{ transform:translateY(-3px); box-shadow:0 10px 30px rgba(6,8,23,0.6) }
+    .options button.correct{ outline:3px solid rgba(16,185,129,0.12); box-shadow:0 6px 22px rgba(16,185,129,0.06) }
+    .options button.wrong{ outline:3px solid rgba(239,68,68,0.08); box-shadow:0 6px 22px rgba(239,68,68,0.04) }
+    .reveal{ margin-top:8px; font-size:14px; color:#a8f0d1; display:none }
 
-    /* balloons */
-    .balloon { display:inline-block; margin:18px; width:84px; height:110px; border-radius:50%; position:relative; animation:float 6s ease-in-out infinite; cursor:pointer; transition:transform .18s ease; }
-    .balloon:after { content:""; position:absolute; bottom:-28px; left:50%; width:2px; height:28px; background:#333; }
-    .red { background:radial-gradient(circle at 30% 30%, #a94442, #5c1a1a); }
-    .green { background:radial-gradient(circle at 30% 30%, #10b981, #065f46); }
-    .purple { background:radial-gradient(circle at 30% 30%, #7c3aed, #2a1650); }
-    .purple.emphasize { animation-name:float,pulse; animation-duration:6s,1.8s; animation-iteration-count:infinite, infinite; animation-timing-function:ease-in-out, ease-in-out; }
-    @keyframes float { 0%{transform:translateY(0);} 50%{transform:translateY(-28px);} 100%{transform:translateY(0);} }
-    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(124,58,237,0.0);} 50%{box-shadow:0 0 24px 6px rgba(124,58,237,0.18);} 100%{box-shadow:0 0 0 0 rgba(124,58,237,0.0);} }
+    /* progress & controls */
+    .controls{ display:flex; gap:12px; align-items:center; margin-top:12px }
+    .controls .btn{ padding:10px 16px; border-radius:10px; background:linear-gradient(90deg,var(--glow),var(--teal)); color:#fff; border:0; font-weight:900; cursor:pointer; box-shadow:0 10px 30px rgba(6,8,23,0.6) }
+    .controls .muted{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:#cfe9ff }
 
-    /* surprise text */
-    .surprise { margin-top:20px; font-size:20px; font-weight:700; color:#cfe9ff; display:none; }
-    .surprise.highlight { background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(16,185,129,0.06)); padding:10px 14px; border-radius:10px; box-shadow:0 8px 30px rgba(2,6,23,0.5); }
+    /* grid & balloons (kept) */
+    .grid-wrap{ margin:18px auto 8px; max-width:1100px; }
+    .balloons{ text-align:center; margin-top:22px }
+    .balloon{ display:inline-block; margin:12px; width:100px; height:130px; border-radius:50%; position:relative; animation:float 6s ease-in-out infinite; cursor:pointer; transition:transform .18s ease }
+    .balloon:after{ content:''; position:absolute; bottom:-28px; left:50%; width:2px; height:28px; background:#333 }
+    .red{ background:radial-gradient(circle at 30% 30%, #ef4444, #7f1d1d) }
+    .green{ background:radial-gradient(circle at 30% 30%, #10b981, #065f46) }
+    .purple{ background:radial-gradient(circle at 30% 30%, #7c3aed, #2a1650) }
+    @keyframes float{ 0%{transform:translateY(0)} 50%{transform:translateY(-18px)} 100%{transform:translateY(0)} }
 
-    /* GRID: 2x2 glass cards + tilt */
-    .grid-wrap { margin:18px auto 8px; max-width:1100px; display:none; }
-    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
-    .card{ position:relative; border-radius:14px; overflow:hidden; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:6px; perspective:1000px; transition:transform .28s ease, box-shadow .28s ease; cursor:pointer; box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
-    .card:hover{ transform: translateY(-8px) scale(1.02); box-shadow:0 22px 48px rgba(3,12,40,0.7), 0 0 30px rgba(56,189,248,0.04); }
-    .card-inner{ transform-style:preserve-3d; transition:transform .12s ease-out; --rx:0deg; --ry:0deg; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
+    /* popup styling for claim page fallback */
+    .claim-cta{ margin-top:20px; text-align:center }
 
-    /* image wrapper so we can apply overlays/filters without modifying the files */
-    .img-wrap{ position:relative; border-radius:10px; overflow:hidden; }
-    .img-wrap img{ display:block; width:100%; height:320px; object-fit:cover; transition:filter .3s ease, transform .3s ease; }
-
-    /* portrait treatment: slight desaturate, cool cyan overlay, vignette */
-    .img-wrap.portrait img{ filter: saturate(0.85) contrast(0.98) brightness(0.98); }
-    .img-wrap.portrait::after{ content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay; background: radial-gradient(ellipse at center, rgba(16,185,129,0.06) 0%, rgba(0,0,0,0.18) 60%); }
-    .img-wrap.portrait::before{ content:""; position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.45) 100%); opacity:0.55; }
-
-    /* landscape treatment: punchy colors and clarity */
-    .img-wrap.landscape img{ filter: saturate(1.15) contrast(1.06) brightness(1.02); }
-    .img-wrap.landscape::after{ content:""; position:absolute; inset:0; pointer-events:none; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); }
-
-    .meta{ position:absolute; left:12px; bottom:12px; color:#dbeafe; background:rgba(2,6,23,0.45); padding:6px 10px; border-radius:8px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; font-size:13px; backdrop-filter: blur(6px) saturate(120%);} 
+    /* confetti */
+    .confetti{ position:fixed; pointer-events:none; width:10px; height:14px; opacity:0.95; transform-origin:center; z-index:9999 }
 
     /* responsive */
-    @media (max-width:880px){ .img-wrap img{height:240px} .grid{gap:12px} .final-popup{ top:6%; left:50%; transform:translate(-50%,-10px) scale(.98); } }
-    @media (max-width:480px){ .grid{grid-template-columns:1fr} .img-wrap img{height:260px} .final-popup{ min-width:90%; left:50%; transform:translate(-50%,-8px) scale(.98); padding:10px; } }
-
-    /* link & button */
-    .link { margin-top:18px; font-size:18px; display:none; }
-    .link a { color:#7ee3ff; text-decoration:underline; font-weight:700; }
-    button { padding:10px 22px; font-size:18px; cursor:pointer; margin-top:20px; background:linear-gradient(#dbeafe,#90e0ff); border:2px solid rgba(255,255,255,0.06); border-radius:10px; color:#07203a; font-weight:700; }
-    button:hover{ transform:translateY(-3px); }
-
-    /* confetti styles */
-    .confetti { position:fixed; pointer-events:none; width:10px; height:14px; opacity:0.95; transform-origin:center; z-index:9999; }
+    @media (max-width:780px){ h1{ font-size:30px } .balloon{ width:84px; height:110px } }
   </style>
 </head>
 <body>
-  <h1>🎈 Birthday Balloon Challenge</h1>
+  <div class="container">
+    <header>
+      <h1>⚔️ Adventure Quest — Birthday Challenge</h1>
+      <div class="intro quest">
+        <p>Ready to take the Adventure Quest? PS: No need to review — stock knowledge will do. No using of AI! 😉</p>
+        <p>Complete the Easy General Questions then the Difficult Practical Challenges. Finish both to reveal the <strong>Claim</strong> button.</p>
+      </div>
+    </header>
 
-  <!-- Final popup placed above the balloons as a dialog -->
-  <div id="finalPopup" class="final-popup" role="dialog" aria-hidden="true">
-    <button class="close" aria-label="Close" onclick="hideFinalPopup()">✕</button>
-    <div class="sparkle" aria-hidden="true"></div>
-    <div class="popup-content">
-      <div class="popup-title">Here's your surprise gift...</div>
-      <div class="popup-body">Oppps got ya — I do not have a tangible gift. Oops, got ya — no tangible gift this time… but this website and our future adventures are my real present. God bless ya!</div>
-      <button class="popup-cta" onclick="openSurpriseFromPopup()">Open Surprise 🎁</button>
+    <!-- Easy round (short answers) -->
+    <section id="easy" class="quest">
+      <h2>🟢 Easy General Questions</h2>
+
+      <div class="question" data-answer="Binary">
+        <div class="qnum">1</div>
+        <div class="qbody">
+          <div class="qtext">The machines whisper only one tongue. What is it?</div>
+          <div class="short"><input placeholder="Type your answer and press Enter" data-index="e1"></div>
+          <div class="reveal" data-reveal>Correct: Binary</div>
+        </div>
+      </div>
+
+      <div class="question" data-answer="Sumerians">
+        <div class="qnum">2</div>
+        <div class="qbody">
+          <div class="qtext">Which civilization first carved cuneiform into clay?</div>
+          <div class="short"><input placeholder="Type your answer and press Enter" data-index="e2"></div>
+          <div class="reveal" data-reveal>Correct: Sumerians</div>
+        </div>
+      </div>
+
+      <div class="question" data-answer="Skin">
+        <div class="qnum">3</div>
+        <div class="qbody">
+          <div class="qtext">The body's largest shield — name it!</div>
+          <div class="short"><input placeholder="Type your answer and press Enter" data-index="e3"></div>
+          <div class="reveal" data-reveal>Correct: Skin</div>
+        </div>
+      </div>
+
+      <div style="text-align:right; margin-top:8px"><button id="easyNext" class="btn muted" disabled>Proceed to Difficult Challenges</button></div>
+    </section>
+
+    <!-- Difficult round (multiple choice) -->
+    <section id="difficult" class="quest" style="display:none">
+      <h2>🔴 Difficult Practical Questions — Prove thy wisdom</h2>
+
+      <!-- Q1 -->
+      <div class="question" data-correct="C">
+        <div class="qnum">1</div>
+        <div class="qbody">
+          <div class="qtext">What should a responsible driver do when the traffic light turns yellow?</div>
+          <div class="options">
+            <button data-choice="A">A. Sabihin “kaya pa ‘to!” habang dinidiinan ang gas</button>
+            <button data-choice="B">B. Magdasal habang tumatawid sa intersection</button>
+            <button data-choice="C">C. Slow down and prepare to stop</button>
+            <button data-choice="D">D. Bilisan kasi baka maunahan ka ng red light</button>
+          </div>
+          <div class="reveal" data-reveal>Correct: C — Slow down and prepare to stop</div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question" data-correct="C">
+        <div class="qnum">2</div>
+        <div class="qbody">
+          <div class="qtext">What does a solid white line on the road usually mean?</div>
+          <div class="options">
+            <button data-choice="A">A. Pwede lumipat ng lane basta mabilis ang kotse</button>
+            <button data-choice="B">B. Road decoration lang para hindi boring tingnan</button>
+            <button data-choice="C">C. Avoid crossing or changing lanes unless permitted because it separates traffic lanes</button>
+            <button data-choice="D">D. Signal na pwede mag-overtake kapag walang enforcer</button>
+          </div>
+          <div class="reveal" data-reveal>Correct: C — Avoid crossing or changing lanes unless permitted</div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question" data-correct="C">
+        <div class="qnum">3</div>
+        <div class="qbody">
+          <div class="qtext">What is the maximum speed limit on a national highway (when conditions are safe and no lower limit posted)?</div>
+          <div class="options">
+            <button data-choice="A">A. 120 km/h — "Maluwag naman ang daan, kaya pa yan!" 😎</button>
+            <button data-choice="B">B. 80 km/h — "Safe na yan, hindi naman ako nagmamadali."</button>
+            <button data-choice="C">C. 100 km/h — "Hindi pa naman lumilipad ang kotse, sakto lang!" 😂</button>
+            <button data-choice="D">D. 150 km/h — "Testing lang kung gaano kalakas makina."</button>
+          </div>
+          <div class="reveal" data-reveal>Correct: C — 100 km/h</div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question" data-correct="B">
+        <div class="qnum">4</div>
+        <div class="qbody">
+          <div class="qtext">A person suddenly faints. What should you do?</div>
+          <div class="options">
+            <button data-choice="A">A. Bigyan agad ng tubig kahit hindi pa gising</button>
+            <button data-choice="B">B. Check their breathing and make sure they are safe</button>
+            <button data-choice="C">C. Paupuin agad para hindi mahiga</button>
+            <button data-choice="D">D. Sampalin ng konti para magising</button>
+          </div>
+          <div class="reveal" data-reveal>Correct: B — Check breathing and safety</div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question" data-correct="C">
+        <div class="qnum">5</div>
+        <div class="qbody">
+          <div class="qtext">What should you do during an earthquake while inside a building?</div>
+          <div class="options">
+            <button data-choice="A">A. Sumigaw ng “MAMA!” habang naghahanap ng matatakbuhan 😂</button>
+            <button data-choice="B">B. Run outside immediately kahit may nahuhulog na bagay</button>
+            <button data-choice="C">C. Drop, Cover, and Hold On until the shaking stops and pray for God’s protection 🙂</button>
+            <button data-choice="D">D. Mag‑video muna para may emergency content</button>
+          </div>
+          <div class="reveal" data-reveal>Correct: C — Drop, Cover, and Hold On</div>
+        </div>
+      </div>
+
+      <div style="text-align:right; margin-top:8px">
+        <button id="finishQuiz" class="btn muted" disabled>Finish and Claim</button>
+      </div>
+    </section>
+
+    <!-- Proceed button (shown after finish) -->
+    <div id="claimSection" style="display:none; text-align:center; margin-top:18px">
+      <p><strong>🎁 All quests complete.</strong></p>
+      <div class="claim-cta"><button id="proceedClaim" class="btn">Please click and get ready to claim your award</button></div>
     </div>
-  </div>
 
-  <div>
-    <div class="balloon red" onclick="showSurprise(1)" title="Click"></div>
-    <div class="balloon green" onclick="showSurprise(2)" title="Click to reveal surprise"></div>
-    <div class="balloon purple emphasize" id="purpleBalloon" onclick="showSurprise(3)" title="Click for a surprise"></div>
-  </div>
+    <!-- Balloons (surprises) -->
+    <div class="balloons">
+      <div class="balloon red" id="balloonAge" title="31 Years kana nganiii!" onclick="revealAge()"></div>
+      <div class="balloon green" id="balloonPics" title="Show surprise pictures" onclick="revealPics()"></div>
+      <div class="balloon purple" id="balloonFinal" title="Final surprise" onclick="finalBomb()"></div>
+    </div>
 
-  <!-- Surprises (kept for click behavior) -->
-  <p id="surprise1" class="surprise">Yes You are 31 years old na nganii'</p>
-  <p id="surprise2" class="surprise">Balloon 2: Here’s your smiling surprise pictures!</p>
-  <p id="surprise3" class="surprise">Oops, got ya — no tangible gift this time… but this website and our future adventures are my real present 🎁.</p>
-
-  <!-- Grid implementation (Option 1) -->
-  <div class="grid-wrap" id="surpriseGridWrap">
-    <div class="grid" id="surpriseGrid">
-      <div class="card" data-index="1">
-        <div class="card-inner">
-          <div class="img-wrap portrait">
-            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise1.jpg" alt="Surprise 1">
-          </div>
-          <div class="meta">Photo 1 • 2026</div>
-        </div>
-      </div>
-      <div class="card" data-index="2">
-        <div class="card-inner">
-          <div class="img-wrap landscape">
-            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise2.jpg" alt="Surprise 2">
-          </div>
-          <div class="meta">Photo 2 • Smiles</div>
-        </div>
-      </div>
-      <div class="card" data-index="3">
-        <div class="card-inner">
-          <div class="img-wrap landscape">
-            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise3.jpg" alt="Surprise 3">
-          </div>
-          <div class="meta">Photo 3 • Memories</div>
-        </div>
-      </div>
-      <div class="card" data-index="4">
-        <div class="card-inner">
-          <div class="img-wrap landscape">
-            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise4.jpg" alt="Surprise 4">
-          </div>
-          <div class="meta">Photo 4 • Cheers</div>
-        </div>
+    <!-- Image grid hidden, same as before -->
+    <div class="grid-wrap" id="surpriseGridWrap" style="display:none; margin-top:20px">
+      <div class="grid" id="surpriseGrid">
+        <!-- keep layout simple; images served from repo -->
+        <div style="display:inline-block; width:48%; margin:1%"><img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise1.jpg" style="width:100%; border-radius:8px"></div>
+        <div style="display:inline-block; width:48%; margin:1%"><img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise2.jpg" style="width:100%; border-radius:8px"></div>
+        <div style="display:inline-block; width:48%; margin:1%"><img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise3.jpg" style="width:100%; border-radius:8px"></div>
+        <div style="display:inline-block; width:48%; margin:1%"><img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise4.jpg" style="width:100%; border-radius:8px"></div>
       </div>
     </div>
+
   </div>
-
-  <p id="link2" class="link">👉 <a href="index.html" target="_blank">Go back to start</a></p>
-
-  <button onclick="window.location.href='index.html'">Back to Start</button>
 
   <script>
-    // Show popup on page load with a slight delay so it feels like a surprise
-    function showFinalPopup(){
-      const p = document.getElementById('finalPopup');
-      p.classList.add('visible');
-      p.setAttribute('aria-hidden','false');
-    }
-    function hideFinalPopup(){
-      const p = document.getElementById('finalPopup');
-      p.classList.remove('visible');
-      p.setAttribute('aria-hidden','true');
-    }
-    function openSurpriseFromPopup(){
-      hideFinalPopup();
-      // trigger the surprise (confetti + highlight)
-      showSurprise(3);
-    }
+    // --- Utilities ---
+    function $(sel){ return document.querySelector(sel) }
+    function $all(sel){ return Array.from(document.querySelectorAll(sel)) }
 
-    window.addEventListener('DOMContentLoaded', ()=> setTimeout(showFinalPopup, 700));
+    // Easy round behavior
+    const easyInputs = $all('#easy input');
+    const easyNext = $('#easyNext');
+    easyInputs.forEach(inp=>{
+      inp.addEventListener('keydown', e=>{
+        if(e.key==='Enter') checkEasy();
+      })
+    });
 
-    // Setup tilt and graceful fallbacks. Cards are hidden initially; reveal when showSurprise(2) is called.
-    function initGridInteractions(){
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        const inner = card.querySelector('.card-inner');
-        // pointer tilt
-        card.addEventListener('pointermove', e => {
-          const rect = card.getBoundingClientRect();
-          const px = (e.clientX - rect.left) / rect.width;
-          const py = (e.clientY - rect.top) / rect.height;
-          const ry = (px - 0.5) * 12; // rotateY
-          const rx = -(py - 0.5) * 8;  // rotateX
-          card.style.setProperty('--ry', ry + 'deg');
-          card.style.setProperty('--rx', rx + 'deg');
-        });
-        card.addEventListener('pointerleave', () => {
-          card.style.setProperty('--ry', '0deg');
-          card.style.setProperty('--rx', '0deg');
-        });
-        // image fallback
-        const img = card.querySelector('img');
-        img.onerror = function(){ this.onerror = null; this.src = 'https://via.placeholder.com/1200x800?text=No+Image'; };
-        // click opens a simple lightbox
-        card.addEventListener('click', () => openLightbox(img.src, img.alt, card.querySelector('.meta').textContent));
+    function checkEasy(){
+      const questions = $all('#easy .question');
+      let ok = true;
+      questions.forEach((q,i)=>{
+        const ans = q.dataset.answer.trim().toLowerCase();
+        const val = q.querySelector('input').value.trim().toLowerCase();
+        if(!val) ok=false;
+        if(val===ans) q.querySelector('[data-reveal]').style.display='block';
       });
+      easyNext.disabled = !ok;
+      if(ok) easyNext.classList.remove('muted');
     }
 
-    function showSurprise(num){
-      if(num===1){
-        document.getElementById('surprise1').style.display = 'block';
-        // small emphasis animation
-        const el = document.getElementById('surprise1');
-        el.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:600});
-      } else if(num===2){
-        document.getElementById('surprise2').style.display = 'block';
-        document.getElementById('surpriseGridWrap').style.display = 'block';
-        document.getElementById('link2').style.display = 'block';
-        // initialize interactions once
-        if(!window._gridInit){ initGridInteractions(); window._gridInit = true; }
-      } else if(num===3){
-        const el = document.getElementById('surprise3');
-        el.style.display = 'block';
-        el.classList.add('highlight');
-        // purple balloon confetti + pulse
-        const balloon = document.getElementById('purpleBalloon');
-        try{ createConfettiBurst(); }catch(e){}
-        if(balloon && balloon.animate){ balloon.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:800}); }
-      }
+    easyNext.addEventListener('click', ()=>{
+      $('#easy').style.display='none';
+      $('#difficult').style.display='block';
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    // Difficult round behavior
+    const difficultQuestions = $all('#difficult .question');
+    difficultQuestions.forEach(q=>{
+      const buttons = Array.from(q.querySelectorAll('.options button'));
+      buttons.forEach(b=> b.addEventListener('click', ()=>{
+        // disable buttons after answer
+        buttons.forEach(bb=> bb.disabled=true);
+        const choice = b.dataset.choice;
+        const correct = q.dataset.correct;
+        if(choice===correct){
+          b.classList.add('correct');
+        } else {
+          b.classList.add('wrong');
+          // highlight correct
+          buttons.find(x=> x.dataset.choice===correct).classList.add('correct');
+        }
+        q.querySelector('[data-reveal]').style.display='block';
+        checkDifficultComplete();
+      }))
+    });
+
+    function checkDifficultComplete(){
+      const allAnswered = difficultQuestions.every(q=> Array.from(q.querySelectorAll('.options button')).every(b=> b.disabled));
+      $('#finishQuiz').disabled = !allAnswered;
+      if(allAnswered) $('#finishQuiz').classList.remove('muted');
     }
 
-    // simple confetti burst
+    // finish -> show claim CTA
+    $('#finishQuiz').addEventListener('click', ()=>{
+      $('#claimSection').style.display='block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior:'smooth' });
+    });
+
+    // Proceed to claim -> navigate to claim.html which shows the popup
+    $('#proceedClaim').addEventListener('click', ()=>{
+      window.location.href = 'claim.html';
+    });
+
+    // Balloon behaviors
+    function revealAge(){
+      alert('31 Years kana nganiii!');
+    }
+    function revealPics(){
+      document.getElementById('surpriseGridWrap').style.display='block';
+      window.scrollTo({ top: document.getElementById('surpriseGridWrap').offsetTop-40, behavior:'smooth' });
+    }
+    function finalBomb(){
+      // confetti + message
+      createConfettiBurst();
+      setTimeout(()=> alert('Happy Birthday! 🎉'), 300);
+    }
+
+    // confetti (simple)
     function createConfettiBurst(){
       const colors = ['#FF5C7C','#FFD166','#7C3AED','#10B981','#60A5FA'];
       const count = 40;
       for(let i=0;i<count;i++){
         const c = document.createElement('div');
-        c.className = 'confetti';
+        c.className='confetti';
         c.style.background = colors[i%colors.length];
-        c.style.left = (50 + (Math.random()-0.5)*30) + '%';
-        c.style.top = (20 + Math.random()*20) + '%';
-        c.style.transform = 'translateY(0) rotate('+ (Math.random()*360) +'deg)';
-        c.style.width = (6 + Math.random()*10)+'px';
-        c.style.height = (8 + Math.random()*12)+'px';
-        c.style.borderRadius = (Math.random()>0.5? '2px':'50%');
-        c.style.position = 'fixed';
-        c.style.zIndex = 12000;
+        c.style.left = (50 + (Math.random()-0.5)*60) + '%';
+        c.style.top = (10 + Math.random()*30) + '%';
+        c.style.transform = 'translateY(0) rotate('+ (Math.random()*360) + 'deg)';
         document.body.appendChild(c);
-        // animate
-        const dx = (Math.random()-0.5)*220;
-        const dy = 260 + Math.random()*260;
+        const dx = (Math.random()-0.5)*400;
+        const dy = 400 + Math.random()*400;
         c.animate([
           { transform: `translate(0,0) rotate(${Math.random()*360}deg)`, opacity:1 },
           { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random()*720}deg)`, opacity:0 }
-        ], { duration: 1200 + Math.random()*900, easing: 'cubic-bezier(.17,.67,.83,.67)' });
-        // cleanup
-        setTimeout(()=>{ try{ c.remove(); }catch(e){} }, 2200 + Math.random()*900);
+        ], { duration: 1200 + Math.random()*900, easing:'cubic-bezier(.17,.67,.83,.67)' });
+        setTimeout(()=> c.remove(), 2200 + Math.random()*900);
       }
     }
 
-    // simple lightbox
-    function openLightbox(src, alt, caption){
-      const overlay = document.createElement('div');
-      overlay.style.position='fixed'; overlay.style.left=0; overlay.style.top=0; overlay.style.right=0; overlay.style.bottom=0; overlay.style.background='rgba(2,6,23,0.85)'; overlay.style.display='flex'; overlay.style.alignItems='center'; overlay.style.justifyContent='center'; overlay.style.zIndex=10000;
-      const img = document.createElement('img'); img.src=src; img.alt=alt; img.style.maxWidth='92%'; img.style.maxHeight='86%'; img.style.borderRadius='8px'; img.style.boxShadow='0 20px 60px rgba(2,6,23,0.8)';
-      const cap = document.createElement('div'); cap.textContent = caption; cap.style.position='absolute'; cap.style.bottom='6%'; cap.style.color='#e6eef8'; cap.style.fontFamily="ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace"; cap.style.background='rgba(0,0,0,0.35)'; cap.style.padding='6px 10px'; cap.style.borderRadius='6px';
-      overlay.appendChild(img); overlay.appendChild(cap);
-      overlay.addEventListener('click', ()=> overlay.remove());
-      document.body.appendChild(overlay);
-    }
+    // Accessibility: allow keyboard to trigger reveal for easy inputs
+    // check easy on blur as well
+    easyInputs.forEach(i=> i.addEventListener('blur', checkEasy));
 
   </script>
 </body>
