@@ -29,12 +29,25 @@
     .card{ position:relative; border-radius:14px; overflow:hidden; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); padding:6px; perspective:1000px; transition:transform .28s ease, box-shadow .28s ease; cursor:pointer; box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
     .card:hover{ transform: translateY(-8px) scale(1.02); box-shadow:0 22px 48px rgba(3,12,40,0.7), 0 0 30px rgba(56,189,248,0.04); }
     .card-inner{ transform-style:preserve-3d; transition:transform .12s ease-out; --rx:0deg; --ry:0deg; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
-    .card img{ display:block; width:100%; height:320px; object-fit:cover; border-radius:10px; transform:translateZ(30px); backface-visibility:hidden; }
+
+    /* image wrapper so we can apply overlays/filters without modifying the files */
+    .img-wrap{ position:relative; border-radius:10px; overflow:hidden; }
+    .img-wrap img{ display:block; width:100%; height:320px; object-fit:cover; transition:filter .3s ease, transform .3s ease; }
+
+    /* portrait treatment: slight desaturate, cool cyan overlay, vignette */
+    .img-wrap.portrait img{ filter: saturate(0.85) contrast(0.98) brightness(0.98); }
+    .img-wrap.portrait::after{ content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay; background: radial-gradient(ellipse at center, rgba(16,185,129,0.06) 0%, rgba(0,0,0,0.18) 60%); }
+    .img-wrap.portrait::before{ content:""; position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.45) 100%); opacity:0.55; }
+
+    /* landscape treatment: punchy colors and clarity */
+    .img-wrap.landscape img{ filter: saturate(1.15) contrast(1.06) brightness(1.02); }
+    .img-wrap.landscape::after{ content:""; position:absolute; inset:0; pointer-events:none; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); }
+
     .meta{ position:absolute; left:12px; bottom:12px; color:#dbeafe; background:rgba(2,6,23,0.45); padding:6px 10px; border-radius:8px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace; font-size:13px; backdrop-filter: blur(6px) saturate(120%);} 
 
     /* responsive */
-    @media (max-width:880px){ .card img{height:240px} .grid{gap:12px} }
-    @media (max-width:480px){ .grid{grid-template-columns:1fr} .card img{height:260px} }
+    @media (max-width:880px){ .img-wrap img{height:240px} .grid{gap:12px} }
+    @media (max-width:480px){ .grid{grid-template-columns:1fr} .img-wrap img{height:260px} }
 
     /* link & button */
     .link { margin-top:18px; font-size:18px; display:none; }
@@ -65,25 +78,33 @@
     <div class="grid" id="surpriseGrid">
       <div class="card" data-index="1">
         <div class="card-inner">
-          <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise1.jpg" alt="Surprise 1">
+          <div class="img-wrap portrait">
+            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise1.jpg" alt="Surprise 1">
+          </div>
           <div class="meta">Photo 1 • 2026</div>
         </div>
       </div>
       <div class="card" data-index="2">
         <div class="card-inner">
-          <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise2.jpg" alt="Surprise 2">
+          <div class="img-wrap landscape">
+            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise2.jpg" alt="Surprise 2">
+          </div>
           <div class="meta">Photo 2 • Smiles</div>
         </div>
       </div>
       <div class="card" data-index="3">
         <div class="card-inner">
-          <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise3.jpg" alt="Surprise 3">
+          <div class="img-wrap landscape">
+            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise3.jpg" alt="Surprise 3">
+          </div>
           <div class="meta">Photo 3 • Memories</div>
         </div>
       </div>
       <div class="card" data-index="4">
         <div class="card-inner">
-          <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise4.jpg" alt="Surprise 4">
+          <div class="img-wrap landscape">
+            <img src="https://angeliquelino-byte.github.io/cautious-telegram/surprise4.jpg" alt="Surprise 4">
+          </div>
           <div class="meta">Photo 4 • Cheers</div>
         </div>
       </div>
