@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Claim — Adventure Quest</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#071028;color:#fff}
+    .center{min-height:100%;display:flex;align-items:center;justify-content:center}
+    .popup{background:linear-gradient(135deg,#0b1228,#171a2b);padding:24px;border-radius:14px;box-shadow:0 30px 80px rgba(2,6,23,0.8);max-width:720px;text-align:center}
+    .popup h1{margin:0 0 12px;font-size:22px;color:#ffd973}
+    .popup p{color:#dbeafe;margin:8px 0 18px}
+    .btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:800;background:linear-gradient(90deg,#7c3aed,#06b6d4);color:#fff}
+    .close{margin-left:10px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#cfe9ff}
+  </style>
+</head>
+<body>
+  <div class="center">
+    <div class="popup" id="popup" role="dialog" aria-labelledby="title">
+      <h1 id="title">🎁 Oppps got ya…</h1>
+      <p>Oppps got ya… but Happy Birthday, Hero!</p>
+      <div>
+        <button class="btn" id="celebrate">Celebrate 🎉</button>
+        <button class="close" id="back">Back</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function burst(){ const colors=['#FF5C7C','#FFD166','#7C3AED','#10B981','#60A5FA']; for(let i=0;i<40;i++){const d=document.createElement('div'); d.style.position='fixed'; d.style.zIndex=9999; d.style.width=(6+Math.random()*10)+'px'; d.style.height=(8+Math.random()*12)+'px'; d.style.left=(50+ (Math.random()-0.5)*60)+'%'; d.style.top=(30+Math.random()*30)+'%'; d.style.background=colors[i%colors.length]; d.style.borderRadius=(Math.random()>0.5? '2px':'50%'); d.style.pointerEvents='none'; document.body.appendChild(d); const dx=(Math.random()-0.5)*600; const dy=300+Math.random()*600; d.animate([{ transform: `translate(0,0) rotate(${Math.random()*360}deg)`, opacity:1 },{ transform: `translate(${dx}px, ${dy}px) rotate(${Math.random()*720}deg)`, opacity:0 }], { duration: 1200 + Math.random()*1200, easing:'cubic-bezier(.17,.67,.83,.67)' }); setTimeout(()=>d.remove(), 2200 + Math.random()*1200); } }
+    document.getElementById('celebrate').addEventListener('click', ()=>{ burst(); setTimeout(()=> alert('Happy Birthday! 🎉'), 400); });
+    document.getElementById('back').addEventListener('click', ()=>{ location.href='balloon.html' });
+    // auto-focus for keyboard users
+    document.getElementById('celebrate').focus();
+  </script>
+</body>
+</html>
