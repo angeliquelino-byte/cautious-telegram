@@ -1,71 +1,763 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Code Quest Adventure - Question 1</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adventure Quest — Parchment Trials</title>
+
+  <!-- Medieval / display fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      background: url('https://www.transparenttextures.com/patterns/parchment.png') repeat;
-      color: #4B2E2E;
-      text-align: center;
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 22px;
+    :root{
+      --paper:#f3e7d3;
+      --edge:#b79b6b;
+      --accent:#c88fef;
+      --accent-2:#7ee7a6;
+      --glow: 0 0 14px rgba(200,143,239,0.9);
+      --shadow: 0 8px 30px rgba(0,0,0,0.25);
+      --gold: #d4af37;
+      --ink: #1b1b1b;
     }
-    h2 {
-      margin-top: 50px;
-      font-size: 42px;
-      color: #8B0000;
-      text-shadow: 2px 2px #FFD700;
+
+    /* page parchment background */
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0,0,0,0.03), transparent 10%),
+        linear-gradient(180deg,#fefcf8 0%, #f7efe0 40%, #efe2c7 100%);
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
-    p { font-size: 26px; margin-top: 20px; }
-    input {
-      padding: 10px;
-      font-size: 20px;
-      margin-top: 20px;
-      border: 2px solid #8B0000;
-      border-radius: 8px;
+
+    /* big parchment card */
+    .stage {
+      max-width:920px;
+      margin:48px auto;
+      padding:36px;
+      background: linear-gradient(180deg,#fffdf6 0%, #fbf0d8 60%, #f1e0ba 100%);
+      border: 6px solid var(--edge);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
-    button {
-      padding: 12px 28px;
-      font-size: 22px;
-      cursor: pointer;
-      margin-top: 20px;
-      background: linear-gradient(#FFD700, #DAA520);
-      border: 3px solid #8B0000;
-      border-radius: 10px;
-      color: #4B2E2E;
-      font-weight: bold;
+    /* subtle paper texture lines */
+    .stage::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-size: 100% 28px;
+      opacity:0.35;
+      pointer-events:none;
     }
-    button:hover { background: linear-gradient(#DAA520, #FFD700); transform: scale(1.1); }
-    .result { margin-top: 20px; font-size: 24px; font-weight: bold; display: none; }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+    .crest{
+      width:84px;
+      height:84px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),#8ecbff);
+      display:grid;
+      place-items:center;
+      font-family:"Uncial Antiqua", Georgia, serif;
+      color:white;
+      font-size:34px;
+      box-shadow: var(--glow);
+      border:3px solid rgba(255,255,255,0.25);
+    }
+
+    h1{
+      margin:0;
+      font-family:"Uncial Antiqua", Georgia, serif;
+      font-size:44px;
+      color:#4b2f1c;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.6);
+    }
+    .tagline{
+      font-family: "Cinzel", serif;
+      color:#6a4a2f;
+      margin-top:6px;
+      font-size:14px;
+      opacity:0.9;
+    }
+
+    /* content sections */
+    .content{
+      margin-top:22px;
+    }
+
+    .panel{
+      background:rgba(255,255,255,0.4);
+      border-radius:12px;
+      padding:18px;
+      margin-bottom:16px;
+      border:1px solid rgba(0,0,0,0.04);
+    }
+
+    .center{
+      text-align:center;
+    }
+
+    /* start button / quest buttons */
+    .btn {
+      display:inline-block;
+      background:linear-gradient(180deg,#ffecd1,#ffd88a);
+      color:#2b1706;
+      padding:12px 20px;
+      border-radius:10px;
+      font-weight:700;
+      letter-spacing:0.6px;
+      border:2px solid rgba(0,0,0,0.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      cursor:pointer;
+      transition:transform .14s ease, box-shadow .14s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform:translateY(-3px); box-shadow: var(--glow), 0 10px 24px rgba(0,0,0,0.2); }
+
+    /* question layout */
+    .question{
+      margin-top:12px;
+      padding:14px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(245,240,230,0.6));
+      border:1px dashed rgba(66, 33, 11, 0.08);
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+    }
+    .q-number{
+      width:42px;
+      height:42px;
+      border-radius:9px;
+      background:var(--edge);
+      color:white;
+      display:grid;
+      place-items:center;
+      font-weight:700;
+      font-family:"Cinzel", serif;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    .q-body{
+      flex:1;
+    }
+    .options{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .choice {
+      padding:10px 12px;
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,245,235,0.9));
+      border:1px solid rgba(0,0,0,0.06);
+      cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .choice:hover{
+      transform:translateX(6px);
+      box-shadow: var(--glow);
+    }
+    .choice.correct{ border-color:rgba(30,180,120,0.7); box-shadow:0 6px 20px rgba(30,180,120,0.12); }
+    .choice.wrong{ border-color:rgba(220,60,60,0.7); box-shadow:0 6px 20px rgba(220,60,60,0.08); opacity:0.9; }
+
+    .muted{ color:#5a4636; font-size:13px; }
+
+    footer.quest-footer{
+      margin-top:22px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+
+    /* modal (award + error) */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(12,12,12,0.5);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:60;
+    }
+    .modal{
+      background:linear-gradient(180deg,#fffdf6,#f7e6c9);
+      padding:28px;
+      border-radius:14px;
+      border:4px solid var(--edge);
+      width:90%;
+      max-width:560px;
+      box-shadow:0 18px 60px rgba(0,0,0,0.4);
+      text-align:center;
+    }
+    .modal h2{ font-family:"Cinzel", serif; margin:0 0 8px 0; font-size:28px; color:#6a3d1a; }
+    .modal p{ margin:8px 0 18px 0; color:#4b392c; }
+
+    /* award button special */
+    .btn-award{
+      background:linear-gradient(180deg,#b8ffdf,#9fffbf);
+      border:2px solid rgba(0,0,0,0.06);
+      box-shadow:0 10px 30px rgba(95,220,170,0.12), var(--glow);
+    }
+
+    /* error big popup */
+    .error-giant{
+      font-family:"Uncial Antiqua", serif;
+      font-size:46px;
+      color:#951919;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.4);
+    }
+
+    /* balloons area */
+    .balloon-stage{
+      margin-top:18px;
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      align-items:flex-end;
+      min-height:260px;
+      position:relative;
+    }
+    .balloon{
+      width:110px;
+      height:150px;
+      border-radius:60% 60% 55% 55%;
+      position:relative;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,0.18);
+      transition:transform .3s cubic-bezier(.2,.9,.2,1);
+    }
+    .balloon:hover{ transform:translateY(-10px) scale(1.04); filter:brightness(1.05); box-shadow:0 14px 36px rgba(0,0,0,0.28); }
+    .string{ width:2px; height:70px; background:rgba(0,0,0,0.12); position:absolute; bottom:-66px; left:50%; transform:translateX(-50%); border-radius:2px; }
+
+    .balloon.red{ background: linear-gradient(180deg,#ff5b5b,#ff2b2b); color:white; }
+    .balloon.green{ background: linear-gradient(180deg,#8fffb8,#37d17f); color:#06321a; }
+    .balloon.purple{ background: linear-gradient(180deg,#c88fef,#8f4de7); color:white; }
+
+    .balloon-label{
+      font-weight:700;
+      text-shadow:0 1px 0 rgba(0,0,0,0.15);
+      font-family:"Cinzel", serif;
+    }
+
+    /* small gallery for surprise images */
+    .gallery{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    .gallery img{
+      width:160px;
+      height:110px;
+      object-fit:cover;
+      border-radius:8px;
+      border:3px solid rgba(255,255,255,0.5);
+      box-shadow:0 8px 22px rgba(0,0,0,0.15);
+    }
+
+    /* final message */
+    .final-message{
+      margin-top:18px;
+      font-family:"Cinzel", serif;
+      font-size:32px;
+      color:#3b2e25;
+      text-align:center;
+      letter-spacing:0.8px;
+    }
+
+    /* confetti container */
+    #confetti-canvas{
+      position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:80; display:none;
+    }
+
+    /* mobile adjustments */
+    @media (max-width:720px){
+      .stage{ margin:18px; padding:18px; }
+      h1{ font-size:34px; }
+      .balloon{ width:88px; height:120px; }
+    }
+
   </style>
 </head>
 <body>
-  <h2>QUESTION 1</h2>
-  <p>WHAT LANGUAGE DO COMPUTERS UNDERSTAND?</p>
-  <input type="text" id="answerBox" placeholder="Type your answer here">
-  <br>
-  <button onclick="checkAnswer()">Submit</button>
-  <div class="result" id="resultMsg"></div>
 
-  <script>
-    function checkAnswer() {
-      const userAnswer = document.getElementById('answerBox').value.trim().toLowerCase();
-      const resultMsg = document.getElementById('resultMsg');
-      if (userAnswer === "binary") {
-        resultMsg.style.display = 'block';
-        resultMsg.style.color = 'green';
-        // Use innerHTML so the button renders properly
-        resultMsg.innerHTML = "Correct! It is Binary! <br><br><a href='question2.html'><button>Next Question</button></a>";
-        confetti();
-      } else {
-        resultMsg.style.display = 'block';
-        resultMsg.style.color = 'red';
-        resultMsg.textContent = "Oops! Try again.";
-      }
+<div class="stage" role="main" aria-labelledby="quest-title">
+  <header>
+    <div class="crest">AQ</div>
+    <div>
+      <h1 id="quest-title">Adventure Quest — Parchment Trials</h1>
+      <div class="tagline">A whimsical test of knowledge. May your wits be sharper than your sword.</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Intro -->
+    <section id="intro" class="panel center" aria-hidden="false">
+      <h2 style="font-family:'Cinzel', serif; margin:6px 0 8px 0;">Ready to take the Adventure Quest?</h2>
+      <p class="muted">PS: No need to review. Stock knowledge will do. No using of AI! — your witty, techy guide awaits. 🎮</p>
+      <div style="margin-top:12px;">
+        <button class="btn" id="start-quest">Start Quest</button>
+        <button class="btn" id="skip-to-difficult" title="Skip ahead (cheater!)" style="opacity:0.85; margin-left:8px;">Skip to Challenges</button>
+      </div>
+    </section>
+
+    <!-- Easy questions -->
+    <section id="easy" class="panel" aria-hidden="true" style="display:none;">
+      <h3 style="font-family:'Uncial Antiqua', serif; font-size:28px; margin:0 0 6px 0;">🟢 Easy General Questions</h3>
+      <p class="muted">Simple lore for travelers and coders alike.</p>
+
+      <!-- Q1 -->
+      <div class="question" data-answer="Binary">
+        <div class="q-number">1</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What language do computers understand?</strong></div>
+          <div class="options" role="list">
+            <div class="choice" data-value="Binary">Binary</div>
+            <div class="choice" data-value="Human">Human (lol)</div>
+            <div class="choice" data-value="Python">Python (maganda but not exactly)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question" data-answer="Sumerians">
+        <div class="q-number">2</div>
+        <div class="q-body">
+          <div class="q-text"><strong>Which civilization invented cuneiform, the earliest known writing system?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="Egyptians">Egyptians</div>
+            <div class="choice" data-value="Sumerians">Sumerians</div>
+            <div class="choice" data-value="Romans">Romans</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question" data-answer="Skin">
+        <div class="q-number">3</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What is the largest organ in the human body?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="Liver">Liver</div>
+            <div class="choice" data-value="Skin">Skin</div>
+            <div class="choice" data-value="Brain">Brain</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="quest-footer">
+        <div class="muted">Answer truthfully or the parchment judges you.</div>
+        <div>
+          <button class="btn" id="easy-next">Proceed to Challenges</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Difficult challenges -->
+    <section id="difficult" class="panel" aria-hidden="true" style="display:none;">
+      <h3 style="font-family:'Uncial Antiqua', serif; font-size:28px; margin:0 0 6px 0;">🔴 Difficult Practical Questions</h3>
+      <p class="muted">For when valor meets responsibility. Taglish wit included.</p>
+
+      <!-- Q1 -->
+      <div class="question" data-answer="C">
+        <div class="q-number">1</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What should a responsible driver do when the traffic light turns yellow?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="A">A. Sabihin “kaya pa ‘to!” habang dinidiinan ang gas</div>
+            <div class="choice" data-value="B">B. Magdasal habang tumatawid sa intersection</div>
+            <div class="choice" data-value="C">C. Slow down and prepare to stop</div>
+            <div class="choice" data-value="D">D. Bilisan kasi baka maunahan ka ng red light</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="question" data-answer="C">
+        <div class="q-number">2</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What does a solid white line on the road usually mean?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="A">A. Pwede lumipat ng lane basta mabilis ang kotse</div>
+            <div class="choice" data-value="B">B. Road decoration lang para hindi boring tingnan</div>
+            <div class="choice" data-value="C">C. Avoid crossing or changing lanes unless permitted because it separates traffic lanes</div>
+            <div class="choice" data-value="D">D. Signal na pwede mag-overtake kapag walang enforcer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="question" data-answer="C">
+        <div class="q-number">3</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What is the maximum speed limit on a national highway (when conditions are safe and no lower speed limit is posted)?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="A">A. 120 km/h — "Maluwag naman ang daan, kaya pa yan!" 😎</div>
+            <div class="choice" data-value="B">B. 80 km/h — "Safe na yan, hindi naman ako nagmamadali."</div>
+            <div class="choice" data-value="C">C. 100 km/h — "Hindi pa naman lumilipad ang kotse, sakto lang!" 😂</div>
+            <div class="choice" data-value="D">D. 150 km/h — "Testing lang kung gaano kalakas makina."</div>
+          </div>
+          <div class="muted" style="margin-top:8px">Correct: C — 100 km/h</div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="question" data-answer="B">
+        <div class="q-number">4</div>
+        <div class="q-body">
+          <div class="q-text"><strong>A person suddenly faints. What should you do?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="A">A. Bigyan agad ng tubig kahit hindi pa gising</div>
+            <div class="choice" data-value="B">B. Check their breathing and make sure they are safe</div>
+            <div class="choice" data-value="C">C. Paupuin agad para hindi mahiga</div>
+            <div class="choice" data-value="D">D. Sampalin ng konti para magising</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="question" data-answer="C">
+        <div class="q-number">5</div>
+        <div class="q-body">
+          <div class="q-text"><strong>What should you do during an earthquake while you are inside a building?</strong></div>
+          <div class="options">
+            <div class="choice" data-value="A">A. Sumigaw ng “MAMA!” habang naghahanap ng matatakbuhan 😂</div>
+            <div class="choice" data-value="B">B. Run outside immediately kahit may nahuhulog na bagay</div>
+            <div class="choice" data-value="C">C. Drop, Cover, and Hold On until the shaking stops and pray for God’s protection 🙂</div>
+            <div class="choice" data-value="D">D. Mag‑video muna para may emergency content</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="quest-footer">
+        <div class="muted">Mayors and knights approve this wisdom.</div>
+        <div>
+          <button class="btn btn-award" id="finish-quest">Claim Your Award</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- balloon surprise section (hidden until after error popup) -->
+    <section id="balloons" class="panel" aria-hidden="true" style="display:none;">
+      <h3 style="font-family:'Uncial Antiqua', serif; font-size:26px; margin:0 0 6px 0;">🎈 Balloon Surprise</h3>
+      <p class="muted">Click each balloon for a little mischief and a surprise.</p>
+
+      <div class="balloon-stage" id="balloon-stage">
+        <div class="balloon red" id="balloon-1" title="Click me!">
+          <div class="balloon-label">1</div>
+          <div class="string"></div>
+        </div>
+
+        <div class="balloon green" id="balloon-2" title="Surprise pictures inside">
+          <div class="balloon-label">2</div>
+          <div class="string"></div>
+        </div>
+
+        <div class="balloon purple" id="balloon-3" title="Final bomb pop">
+          <div class="balloon-label">3</div>
+          <div class="string"></div>
+        </div>
+      </div>
+
+      <div id="balloon-output" class="center" style="margin-top:14px;"></div>
+    </section>
+
+  </div>
+</div>
+
+<!-- modal backdrop -->
+<div id="modal-backdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <h2 id="modal-title">You earned a reward!</h2>
+    <p id="modal-text">Please click and get ready to claim your award.</p>
+    <div style="display:flex; justify-content:center; gap:12px; margin-top:12px;">
+      <button class="btn btn-award" id="claim-award">Please click and get ready to claim your award.</button>
+      <button class="btn" id="close-modal">Not yet</button>
+    </div>
+  </div>
+</div>
+
+<!-- "Oppps got ya..." backdrop -->
+<div id="error-backdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" style="max-width:640px;">
+    <div class="error-giant">Oppps got ya…</div>
+    <p class="muted">No award today — only balloons and laughter. Click below to see a surprise!</p>
+    <div style="margin-top:12px;">
+      <button class="btn" id="show-balloons">Show me the balloons 🎈</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+  // Basic state
+  const intro = document.getElementById('intro');
+  const easy = document.getElementById('easy');
+  const difficult = document.getElementById('difficult');
+  const balloons = document.getElementById('balloons');
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  const modal = document.getElementById('modal');
+  const errorBackdrop = document.getElementById('error-backdrop');
+
+  // Start quest
+  document.getElementById('start-quest').addEventListener('click', () => {
+    intro.style.display='none';
+    easy.style.display='block';
+    easy.setAttribute('aria-hidden','false');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('skip-to-difficult').addEventListener('click', () => {
+    intro.style.display='none';
+    difficult.style.display='block';
+    difficult.setAttribute('aria-hidden','false');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  // Choices handling: highlight correct/incorrect and lock per question
+  function bindChoices(section){
+    const questions = section.querySelectorAll('.question');
+    questions.forEach(q=> {
+      const correct = q.getAttribute('data-answer');
+      const opts = q.querySelectorAll('.choice');
+      opts.forEach(opt => {
+        opt.addEventListener('click', ()=> {
+          if (opt.classList.contains('locked')) return;
+          // lock all options of this question
+          opts.forEach(o=> o.classList.add('locked'));
+          const val = opt.getAttribute('data-value');
+          if ( (val && val.toString().trim() === correct.toString().trim()) ){
+            opt.classList.add('correct');
+            showFloatingText(q, "Nice! ✅", "#2aa65a");
+          } else {
+            opt.classList.add('wrong');
+            // reveal the correct one
+            opts.forEach(o=>{
+              if (o.getAttribute('data-value') && o.getAttribute('data-value').toString().trim() === correct.toString().trim()) {
+                o.classList.add('correct');
+              }
+            });
+            showFloatingText(q, "Ay! Next!", "#c83838");
+          }
+        });
+      });
+    });
+  }
+  function showFloatingText(el, text, color){
+    const span = document.createElement('div');
+    span.textContent = text;
+    span.style.position='absolute';
+    span.style.background=color;
+    span.style.color='white';
+    span.style.padding='6px 8px';
+    span.style.borderRadius='8px';
+    span.style.transform='translateY(-8px)';
+    span.style.fontWeight='700';
+    span.style.zIndex=30;
+    el.style.position='relative';
+    el.appendChild(span);
+    setTimeout(()=> span.style.opacity=0,1100);
+    setTimeout(()=> el.removeChild(span),1500);
+  }
+
+  bindChoices(easy);
+  bindChoices(difficult);
+
+  // Proceed to difficult
+  document.getElementById('easy-next').addEventListener('click', ()=>{
+    easy.style.display='none';
+    difficult.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  // Finish quest -> show award modal
+  document.getElementById('finish-quest').addEventListener('click', ()=>{
+    modalBackdrop.style.display='flex';
+    modalBackdrop.setAttribute('aria-hidden','false');
+    // small confetti tease
+    setTimeout(()=> confettiBurst(40), 260);
+  });
+
+  document.getElementById('close-modal').addEventListener('click', ()=>{
+    modalBackdrop.style.display='none';
+  });
+
+  // Clicking the award button simulates redirect to next page with error popup
+  document.getElementById('claim-award').addEventListener('click', ()=>{
+    modalBackdrop.style.display='none';
+    // "redirect": show the big error modal
+    setTimeout(()=>{
+      errorBackdrop.style.display='flex';
+      errorBackdrop.setAttribute('aria-hidden','false');
+      // dramatic small confetti streak
+      confettiBurst(80);
+    }, 250);
+  });
+
+  // After "Oppps got ya", show balloons section
+  document.getElementById('show-balloons').addEventListener('click', ()=>{
+    errorBackdrop.style.display='none';
+    balloons.style.display='block';
+    balloons.setAttribute('aria-hidden','false');
+    window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+    // float-in effect
+    spawnBalloonsFloat();
+  });
+
+  // Balloon interactions
+  const b1 = document.getElementById('balloon-1');
+  const b2 = document.getElementById('balloon-2');
+  const b3 = document.getElementById('balloon-3');
+  const output = document.getElementById('balloon-output');
+
+  b1.addEventListener('click', ()=> {
+    // show message
+    output.innerHTML = '<div class="panel" style="display:inline-block; text-align:center;"><strong>31 Years kana nganiii!</strong><div class="muted" style="margin-top:6px">Time flies — level up na!</div></div>';
+    confettiBurst(40, {spread:50});
+  });
+
+  b2.addEventListener('click', ()=> {
+    // show surprise pictures (placeholder images; you can replace the src)
+    output.innerHTML = `
+      <div class="panel" style="display:inline-block; text-align:center; max-width:740px;">
+        <div style="font-weight:700; margin-bottom:8px">Surprise Pictures</div>
+        <div class="gallery">
+          <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="surprise-1" />
+          <img src="https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="surprise-2" />
+          <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="surprise-3" />
+        </div>
+        <div class="muted" style="margin-top:8px">(Replace these images with your surprise photos by editing the HTML.)</div>
+      </div>
+    `;
+    confettiBurst(30, {spread:80});
+  });
+
+  b3.addEventListener('click', ()=> {
+    // final "bomb pop" — big confetti + final message
+    output.innerHTML = `<div class="panel" style="display:inline-block;"><div class="final-message">Happy Birthday! 🎉</div><div class="muted" style="margin-top:8px">From your friendly quest generator (that's me, with a hint of techy mischief).</div></div>`;
+    bigConfettiSequence();
+    // animate balloon pop effect
+    popBalloonVisual(b3);
+  });
+
+  function popBalloonVisual(el){
+    el.style.transition='transform .2s ease, opacity .3s ease';
+    el.style.transform='scale(0.2) rotate(20deg)';
+    el.style.opacity='0';
+    setTimeout(()=> el.style.display='none', 500);
+  }
+
+  /* --- Simple confetti implementation using canvas --- */
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let confettiParticles = [];
+  let confettiAnim = null;
+
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function ConfettiParticle(x,y,dx,dy,size,color,gravity,tilt){
+    this.x=x; this.y=y; this.dx=dx; this.dy=dy; this.size=size; this.color=color; this.gravity=gravity; this.tilt=tilt;
+  }
+  ConfettiParticle.prototype.update = function(dt){
+    this.dy += this.gravity * dt;
+    this.x += this.dx * dt;
+    this.y += this.dy * dt;
+    this.tilt += 0.1;
+    if (this.y > canvas.height + 40) {
+      // recycle
+      this.y = -10 - Math.random()*80;
+      this.x = Math.random()*canvas.width;
+      this.dy = Math.random()*-0.5;
     }
-  </script>
-</body>
-</html>
+  }
+  ConfettiParticle.prototype.draw = function(){
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(Math.sin(this.tilt) * 0.2);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size*0.6);
+    ctx.restore();
+  }
+
+  function confettiBurst(count=60, opts = {}) {
+    canvas.style.display='block';
+    const colors = ['#ff5b5b','#ffd166','#90f0c7','#8ec5ff','#c88fef','#ffd1ff','#ffd79c'];
+    for (let i=0;i<count;i++){
+      const size = 6 + Math.random()*10;
+      const x = (opts.x || (canvas.width * 0.5)) + (Math.random()*200 - 100);
+      const y = (opts.y || (canvas.height * 0.2)) + (Math.random()*80 - 40);
+      const dx = (Math.random()*6 - 3) + (Math.random()>0.5?2:-2);
+      const dy = - (Math.random()*6 + 2);
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      const gravity = 0.06 + Math.random()*0.12;
+      confettiParticles.push(new ConfettiParticle(x,y,dx,dy,size,color,gravity,Math.random()*6));
+    }
+    if (!confettiAnim) {
+      let last = performance.now();
+      confettiAnim = requestAnimationFrame(function frame(t){
+        const dt = Math.min(1/30, (t - last) / 16.666);
+        last = t;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for (let p of confettiParticles){
+          p.update(dt);
+          p.draw();
+        }
+        // fade out when few particles
+        if (confettiParticles.length === 0) {
+          canvas.style.display='none';
+          cancelAnimationFrame(confettiAnim);
+          confettiAnim=null;
+          return;
+        }
+        // slowly reduce particles
+        for (let i = confettiParticles.length - 1; i >= 0; i--) {
+          const p = confettiParticles[i];
+          if (p.y > canvas.height + 60) confettiParticles.splice(i,1);
+        }
+        confettiAnim = requestAnimationFrame(frame);
+      });
+    }
+    // auto-clear after a bit
+    setTimeout(()=> {
+      confettiParticles = confettiParticles.slice(Math.max(0, confettiParticles.length-60));
+    }, 2200);
+  }
+
+  function bigConfettiSequence(){
+    confettiBurst(120);
+    setTimeout(()=> confettiBurst(90), 350);
+    setTimeout(()=> confettiBurst(60), 800);
+  }
+
+  /* balloon float animation spawn */
+  function spawnBalloonsFloat(){
+    const bs = document.querySelectorAll('.balloon');
+    bs.forEach((b, i) => {
+      const delay = i*120;
+      b.animate([
+        { transform: 'translateY(60px)'},
